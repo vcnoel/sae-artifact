@@ -117,7 +117,18 @@ def main():
     ap.add_argument("--n_feat", type=int, default=300)
     ap.add_argument("--n_pos", type=int, default=4)
     ap.add_argument("--out", default="results/multi_dict.csv")
+    # PREREG E10: override the grid to sweep DEPTH at matched width/sparsity.
+    # Format "layer:width:l0,...". L0 is matched only as closely as the Gemma
+    # Scope release allows (68/82/73/73 at layers 5/12/19/24), a ~20% spread
+    # that has to be stated rather than glossed.
+    ap.add_argument("--grid", default="",
+                    help='e.g. "5:16k:68,12:16k:82,19:16k:73,24:16k:73"')
     a = ap.parse_args()
+    global GRID
+    if a.grid:
+        GRID = [(int(p.split(":")[0]), p.split(":")[1], int(p.split(":")[2]))
+                for p in a.grid.split(",")]
+        print("grid override:", GRID, flush=True)
 
     tok = AutoTokenizer.from_pretrained(MODEL)
     model = AutoModelForCausalLM.from_pretrained(

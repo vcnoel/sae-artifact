@@ -124,6 +124,13 @@ def main():
     # what the matched comparison requires.
     ap.add_argument("--arm", default="both",
                     choices=["both", "trained", "frozen"])
+    # Checkpoint series: the within-architecture training curve. Comparing
+    # Gemma Scope (2.269x) to this arm (2.104x) and attributing the near-equality
+    # to training budget confounds architecture (JumpReLU vs TopK), sparsity
+    # semantics (average L0 vs exact k), the control dictionary and the feature
+    # list. A curve from ONE arm at several budgets isolates budget alone.
+    ap.add_argument("--ckpt_every", type=int, default=0,
+                    help="save a checkpoint every N tokens (0 = off)")
     a = ap.parse_args()
 
     tok = AutoTokenizer.from_pretrained(MODEL)
@@ -147,7 +154,7 @@ def main():
     fired = {k: torch.zeros(WIDTH, device=DEV) for k in arms}
 
     # b_dec <- mean activation, standard init; estimated from the first chunk
-    step, seen, ema = 0, 0, {k: None for k in arms}
+    step, seen, next_ck, ema = 0, 0, 0, {k: None for k in arms}
     for x in stream(model, tok, texts, a.tokens):
         if step == 0:
             for m in arms.values():
@@ -173,6 +180,13 @@ def main():
                     f"{n}: mse={ema[n]:.1f} ev={1-ema[n]/v:.3f} "
                     f"dead={(fired[n]==0).float().mean():.1%}" for n in arms)
             print(f"{seen/1e6:5.1f}M tok | {msg}", flush=True)
+        if a.ckpt_every and seen // a.ckpt_every > next_ck:
+            next_ck = seen // a.ckpt_every
+            mtok = next_ck * a.ckpt_every // 1_000_000
+            for n, m in arms.items():
+                torch.save({n: m.state_dict()},
+                           f"data/ck_{n}_{mtok}M.pt")
+            print(f"  [checkpoint at {mtok}M tokens]", flush=True)
 
     with torch.no_grad():
         for n, m in arms.items():

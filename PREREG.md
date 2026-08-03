@@ -243,6 +243,87 @@ it is an anecdote and the direct-path argument rests on the correlation alone.
 
 ---
 
+## E8 — Artifact 4 reframed as a SENSITIVITY, not an artifact **[post-E6]**
+
+E6's failure has a consequence. The junk latents are roughly the top 20 of 16384,
+i.e. the 99.88th percentile. **No sample a paper would realistically draw reaches
+them** — the top-20-by-alignment of a 240-sample lands near the 92nd dictionary
+percentile and is 90% wordlike. So the triviality confound does not exist in
+practice: at any realistic sample size, high-alignment latents are semantic.
+
+Artifact 4 is therefore NOT "measurements are inflated by trivial features". It is:
+
+> Ablation-based causal-effect measurements are sensitive to unembedding
+> alignment at rho ~ 0.3, and within realistic samples that alignment reflects
+> semantic content rather than triviality.
+
+A property to report, not a confound to adjust away — which is what dropping the
+adjustment already implies. **The catalogue is four artifacts plus one
+sensitivity.** Weaker and correct.
+
+## E9 — The layer-19 tension, and what falsified my resolution **[tested]**
+
+Two results sit in apparent contradiction:
+- t+3 decay is SHARPER at layer 19 (ratio 0.037-0.114) than layer 12
+  (0.197-0.523): more of the measured effect sits at the firing position deeper in.
+- Alignment predicts causal mass at layer 12 (mean rho +0.328) and NOT at layer 19
+  (mean rho -0.045).
+
+If layer 19 were more direct-path dominated, alignment should matter *more* there.
+
+**Hypothesis tested and FALSIFIED.** I proposed a ceiling effect: at layer 19 nearly
+every latent has a strong direct path, so alignment stops discriminating and the
+correlation compresses. The variance data rules this out — mean CV(alignment) is
+0.1175 at layer 12 vs 0.1091 at layer 19 (7% lower, trivial), and sd(log kpn) is
+*higher* at layer 19 (0.660 vs 0.588). Ample variance in both variables; no
+correlation appears.
+
+**The propagation reading explains ONE HALF only.** Fewer remaining attention
+operations at layer 19 means less opportunity for the perturbation to propagate
+across positions, which accounts for the t+3 gradient without implying direct-path
+dominance. But that reading makes the effect at t *more* locally determined at
+layer 19 (89-96% of it is gone by t+3), so alignment should predict causal mass
+MORE strongly there, not less. The alignment null is left exactly where it was.
+
+**Correcting my own entry:** I first wrote this up as a post-hoc resolution. It is
+not one. The honest disclosure:
+
+> The t+3 gradient is consistent with fewer remaining attention operations rather
+> than with greater direct-path dominance, and therefore does not support
+> artifact 4. Why alignment predicts causal mass at layer 12 (rho = +0.33) and not
+> at layer 19 (rho = -0.05) is **unexplained**; the compressed-variance hypothesis
+> is falsified by equal alignment spread (CV 0.1175 vs 0.1091) and greater
+> causal-mass spread (sd 0.588 vs 0.660) at layer 19.
+
+An unexplained layer dependence is a fine thing to report. A wrongly-closed one is
+not. The t+3 gradient must not be presented as supporting artifact 4 either way.
+
+## E10 — Four-depth test **[LIVE — written before the run]**
+
+Two depths cannot discriminate; Gemma Scope covers all 26 layers of gemma-2-2b, so
+four can. Adding layers 5 and 24 to the existing 12 and 19.
+
+**Prediction 1 (propagation), fixed in advance.** If propagation limits drive the
+t+3/t0 ratio, it scales with REMAINING layer count: 21 remaining at layer 5, 14 at
+layer 12, 7 at layer 19, 2 at layer 24. Observed so far: ~0.38 at layer 12 and
+~0.10 at layer 19. Predicted: **layer 5 above 0.5, layer 24 below 0.02**, and the
+four points monotone decreasing in depth.
+
+**Prediction 2 (alignment), fixed in advance.** No directional prediction is
+justified, since the layer-19 null is unexplained. The question is the SHAPE: is
+the layer-12-to-19 change a threshold or a gradient? Four depths distinguish them.
+A monotone gradient with a sign change in the middle would be a more interesting
+finding than either a threshold or a constant.
+
+**Falsification.** If layer 5 comes in below layer 12, or layer 24 above layer 19,
+the propagation reading is wrong and the t+3 gradient needs a different account
+entirely.
+
+**Kill.** If t+3/t0 is flat across all four depths, both the propagation reading and
+the direct-path reading of the gradient are wrong, and the layer-12-vs-19
+difference observed so far is noise across dictionary configurations rather than a
+depth effect.
+
 ## Standing scope constraint
 
 The four artifacts apply to **ablation-based** causal-effect metrics (zero or
