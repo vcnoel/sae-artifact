@@ -72,6 +72,11 @@ def main():
     ap.add_argument("--n_seq", type=int, default=96)
     ap.add_argument("--per_bin", type=int, default=40)
     ap.add_argument("--n_pos", type=int, default=6)
+    ap.add_argument("--uniform", action="store_true",
+                    help="PREREG E6: uniform sample over live latents")
+    ap.add_argument("--with_random", action="store_true",
+                    help="PREREG E6 secondary: add an untrained tied random "
+                         "arm on the same feature list (the missing cell)")
     ap.add_argument("--out", default="results/eval_saes.csv")
     a = ap.parse_args()
 
@@ -84,6 +89,16 @@ def main():
         m = TopKSAE(D_MODEL, WIDTH, K, 0).to(DEV)
         m.load_state_dict(sd[n])
         arms[n] = m.eval()
+    if a.with_random:
+        # PREREG E6 secondary: the MISSING CELL. An untrained tied dictionary
+        # evaluated on the SAME feature list turns the decomposition
+        # (vs-untrained / vs-soft-frozen) from two experiments into one
+        # dictionary measured three ways. b_dec is taken from the trained arm so
+        # the three arms share the activation-mean offset and differ only in
+        # decoder directions and encoder training.
+        m = TopKSAE(D_MODEL, WIDTH, K, 999).to(DEV)
+        m.b_dec.data = arms["trained"].b_dec.data.clone()
+        arms["random"] = m.eval()
 
     txt = [str(t).strip() for t in pd.read_parquet(WIKI)["text"].tolist()
            if len(str(t).strip()) > 400 and not str(t).strip().startswith("=")]
@@ -124,13 +139,26 @@ def main():
         freq = (A > 0).float().mean((0, 1)).numpy()
         live = np.where(freq > 1e-5)[0]
         print(f"{name}: EV={ev:.3f} live={len(live)}/{WIDTH}", flush=True)
-        lf = np.log10(freq[live])
-        qs = np.quantile(lf, np.linspace(0, 1, 7))
-        for b in range(6):
-            pool = live[(lf >= qs[b]) & (lf <= qs[b + 1])]
+        if a.uniform:
+            # PREREG E6: uniform over live latents; see sae_rare.py for why the
+            # frequency stratification had to go.
+            pools = [rng.choice(live, size=min(a.per_bin * 6, len(live)),
+                                replace=False)]
+            bins = [-1]
+        else:
+            lf = np.log10(freq[live])
+            qs = np.quantile(lf, np.linspace(0, 1, 7))
+            pools, bins = [], []
+            for b in range(6):
+                pools.append(live[(lf >= qs[b]) & (lf <= qs[b + 1])])
+                bins.append(b)
+        # In uniform mode the single pool IS the selection, so take all of it;
+        # in stratified mode take per_bin from each of the six pools.
+        take = a.per_bin * 6 if a.uniform else a.per_bin
+        for b, pool in zip(bins, pools):
             if len(pool) == 0:
                 continue
-            for fid in rng.choice(pool, size=min(a.per_bin, len(pool)),
+            for fid in rng.choice(pool, size=min(take, len(pool)),
                                   replace=False):
                 col = A[:, :, int(fid)].reshape(-1)
                 n = min(a.n_pos, int((col > 0).sum()))
@@ -144,10 +172,14 @@ def main():
                 pos = [p for _, _, p in best]
                 vecs = [float(v) * dvec for v, _, _ in best]
                 kls = kl_batch(model, ib, pos, vecs)
-                for kl, (v, _, _) in zip(kls, best):
+                for kl, (v, _, p) in zip(kls, best):
                     pn = float((v * dvec).norm().item())
+                    # pos recorded so candidate artifact 5 is checkable on the
+                    # endpoint sample; sae_rare.csv omitted it, my error.
                     rows.append(dict(arm=name, fid=int(fid), bin=b,
-                                     freq=float(freq[fid]), kl=kl, pnorm=pn,
+                                     freq=float(freq[fid]), pos=p,
+                                     rel_pos=p / (T - 1), act=v,
+                                     kl=kl, pnorm=pn,
                                      kl_per_norm=kl / max(pn, 1e-6)))
         print(f"  {name} done, rows={len(rows)}", flush=True)
 

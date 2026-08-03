@@ -1,0 +1,10 @@
+tag,fid,wl,toks
+L12_131k_l067,95833,0.8,' which' ' Which' ' WHICH' 'which' 'Which' ' ซึ่ง' ' אשר' ' wich'
+L12_16k_l022,15596,0.7,' is' ' not' ' are' ' was' ' a' ' be' ' always' ' being'
+L12_16k_l0445,12926,0.9,'eeee' 'e' 'eee' 'eeeeeeee' 'eeeeee' 'ope' 'eeeee' 'ede'
+L12_16k_l082,8081,0.2,'4' '5' '４' '6' '8' '3' '۴' '7'
+L12_65k_l072,15879,0.0,' Ab' 'Ab' ' ab' 'Ch' ' Su' 'P' ' ப' ' N'
+L19_16k_l023,1381,1.0,'Bobby' 'Bob' ' Bob' 'bie' ' Bobby' 'ber' 'bob' ' BOB'
+L19_16k_l0279,14508,0.9,' from' 'from' ' FROM' 'จาก' ' från' 'From' ' From' ' dari'
+L19_16k_l073,10356,0.6,' to' ' kepada' ' thereto' 'tothe' ' به' ' к' '到' ' إلى'
+L19_65k_l063,60785,0.3,'D' 'getD' ' D' ' d' 'ｄ' ' DHS' ' د' 'Ds'

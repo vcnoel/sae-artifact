@@ -134,6 +134,9 @@ def main():
     ap.add_argument("--n_seq", type=int, default=96)
     ap.add_argument("--per_bin", type=int, default=40)
     ap.add_argument("--n_pos", type=int, default=6)
+    ap.add_argument("--uniform", action="store_true",
+                    help="PREREG E6: uniform random sample over live latents "
+                         "instead of frequency stratification")
     ap.add_argument("--out", default="results/sae_rare.csv")
     a = ap.parse_args()
 
@@ -179,16 +182,27 @@ def main():
 
     # --- stratify live features by log frequency ---
     live = np.where(freq > 1e-5)[0]
-    lf = np.log10(freq[live])
-    qs = np.quantile(lf, np.linspace(0, 1, 7))
     rng = np.random.default_rng(0)
     picks = []
-    for b in range(6):
-        m = live[(lf >= qs[b]) & (lf <= qs[b + 1])]
-        if len(m) == 0:
-            continue
-        sel = rng.choice(m, size=min(a.per_bin, len(m)), replace=False)
-        picks += [(int(f), b, float(freq[f])) for f in sel]
+    if a.uniform:
+        # PREREG E6. The frequency stratification is vestigial -- frequency
+        # predicts causal mass in neither arm (rho=-0.047 p=0.46) -- and it is
+        # the direct cause of the endpoint bracket: the stratified sample sits
+        # at median alignment percentile ~49-54%, missing the extreme-alignment
+        # latents entirely, so an alignment adjustment fitted on it is fitted on
+        # the odd population. Uniform sampling gives one population.
+        n = a.per_bin * 6
+        sel = rng.choice(live, size=min(n, len(live)), replace=False)
+        picks = [(int(f), -1, float(freq[f])) for f in sel]
+    else:
+        lf = np.log10(freq[live])
+        qs = np.quantile(lf, np.linspace(0, 1, 7))
+        for b in range(6):
+            m = live[(lf >= qs[b]) & (lf <= qs[b + 1])]
+            if len(m) == 0:
+                continue
+            sel = rng.choice(m, size=min(a.per_bin, len(m)), replace=False)
+            picks += [(int(f), b, float(freq[f])) for f in sel]
     print(f"selected {len(picks)} trained features across 6 frequency bins",
           flush=True)
 

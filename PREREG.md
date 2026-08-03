@@ -166,6 +166,50 @@ random dictionary on the same uniform feature list — converts the decompositio
 (2.14 / 1.42 / 1.21) from three numbers across two experiments into one
 dictionary measured three ways.
 
+### E6 OUTCOME (run 2026-08-03 08:59-09:20)
+
+**The prediction FAILED and the decision rule fired.**
+
+Predicted: uniform sampling would put the top-alignment latents at wordlike
+0.1-0.3. Observed: **0.90** in the uniform Gemma Scope sample and **0.90** in my
+trained arm — identical to the stratified sample, not the dictionary-wide 0.10.
+
+**Why the prediction was wrong.** The problem was never stratification, it was
+sample SIZE. The junk latents are roughly the top 20 of 16384 (top 0.12%). The
+top 20 of a 240-sample is the top 8% of that sample, which lands near the 92nd
+dictionary percentile — nowhere near the extreme tail. No sampling *scheme* at
+n=240 can reach those latents. E5's population-dependence result stands, but the
+fix I proposed does not address it.
+
+**Decision rule, as pre-registered:** wordlike median > 0.6 means the triviality
+reading is unavailable, so the alignment-adjusted numbers are dropped in favour of
+the raw ones. Honoured below.
+
+**Endpoints (raw HL, primary; adjusted shown for completeness):**
+
+| comparison | raw HL | 95% CI | adjusted HL |
+|---|---|---|---|
+| Gemma Scope vs untrained tied (uniform) | **2.269** | [1.934, 2.638] | 1.795 |
+| my trained vs untrained tied (same list) | **2.104** | [1.830, 2.415] | 1.981 |
+| my trained vs soft-frozen (same list) | **1.192** | [1.032, 1.399] | 1.132 (incl. 1) |
+
+The decomposition is now one dictionary, one feature list, three controls:
+**2.104x over an untrained dictionary, 1.192x over soft-frozen.** Most of the
+advantage is the encoder; decoder freedom buys 1.19x.
+
+**Unpredicted and worth reporting.** Gemma Scope (JumpReLU, >=500M tokens) and my
+arm (TopK, 12M tokens) give near-identical advantages over an untrained control,
+2.269x vs 2.104x. Roughly 40x more training data buys almost nothing on this
+metric, which sits alongside E4's finding that the reconstruction gap widens
+monotonically while causal effect does not.
+
+**Alignment replicates in the uniform sample:** rho=+0.341 (Gemma Scope),
++0.262 (mine), against +0.375 and +0.264 stratified.
+
+**Artifact 5 is not a threat to the endpoint:** rho(kpn, rel_pos) = -0.084,
+p=0.196 on the endpoint sample (it was pooled-significant only across 2700
+sweep latents).
+
 ---
 
 ## E7 — Nine-dictionary sweep **[RECONSTRUCTED, run in progress at time of writing]**
