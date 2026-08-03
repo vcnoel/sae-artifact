@@ -1,0 +1,32 @@
+==============================================================================
+CONSEQUENTIALITY OF THE FAMILY CORRECTION
+claim under test: 'score increases with scale, across N models'
+pool: 321 official non-merge models, 23 lineages
+==============================================================================
+
+                            design  naive sig  clustered sig   flipped  SE ratio
+------------------------------------------------------------------------------
+           N=6, 6 families (1/fam)     53.0%         72.7%     0.4%      0.69
+           N=8, 4 families (2/fam)     64.7%         77.5%     1.7%      0.71
+         N=12, 12 families (1/fam)     82.3%         90.2%     0.4%      0.76
+          N=12, 6 families (2/fam)     80.5%         85.5%     2.4%      0.79
+          N=12, 3 families (4/fam)     77.8%         81.3%     4.0%      0.76
+         N=20, 10 families (2/fam)     95.6%         96.1%     1.1%      0.84
+          N=20, 5 families (4/fam)     93.2%         92.2%     3.0%      0.86
+          N=30, 8 families (3/fam)     97.0%         97.1%     0.9%      0.88
+
+==============================================================================
+DESIGN EFFECT as a function of models-per-family, at ICC = 0.28
+==============================================================================
+    models/family    deff   n_eff for N=12
+                1    1.00             12.0
+              1.5    1.14             10.5
+                2    1.28              9.4
+                3    1.56              7.7
+                4    1.84              6.5
+                6    2.40              5.0
+
+  A paper sampling one model per family loses NOTHING (deff = 1.00).
+  The correction only bites when a paper stacks several members of the
+  same family -- which is exactly what a scaling study does, and exactly
+  what a breadth study does not.

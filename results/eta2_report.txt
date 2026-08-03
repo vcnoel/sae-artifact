@@ -1,0 +1,54 @@
+==============================================================================
+ETA-SQUARED: MODEL FAMILY vs BENCHMARK SCORE
+Open LLM Leaderboard v2, 4576 models. Reference: language family eta^2=0.701
+==============================================================================
+
+### ALL leaderboard (n=4576)   (n=4576)
+    Architecture: eta2=0.139  omega2=0.130  n=4556 k= 44 med_grp=6
+         lineage: eta2=0.107  omega2=0.098  n=2255 k= 23 med_grp=30
+             org: eta2=0.581  omega2=0.535  n=4294 k=433 med_grp=4
+
+### official providers only   (n=470)
+    Architecture: eta2=0.368  omega2=0.315  n= 458 k= 36 med_grp=4
+         lineage: eta2=0.334  omega2=0.285  n= 330 k= 23 med_grp=12
+             org: eta2=0.366  omega2=0.297  n= 455 k= 45 med_grp=6
+
+### pretrained/base only   (n=333)
+    Architecture: eta2=0.234  omega2=0.166  n= 323 k= 27 med_grp=3
+         lineage: eta2=0.323  omega2=0.220  n= 162 k= 22 med_grp=6
+             org: eta2=0.588  omega2=0.510  n= 280 k= 45 med_grp=4
+
+### PAPER-LIKE (official & pretrained/chat, non-merge)   (n=461)
+    Architecture: eta2=0.367  omega2=0.313  n= 449 k= 36 med_grp=4
+         lineage: eta2=0.329  omega2=0.279  n= 325 k= 23 med_grp=12
+             org: eta2=0.373  omega2=0.304  n= 446 k= 45 med_grp=6
+
+==============================================================================
+PER-BENCHMARK, family = lineage, PAPER-LIKE population
+==============================================================================
+      Average ⬆️: eta2=0.329  omega2=0.279  n= 325 k= 23
+          IFEval: eta2=0.246  omega2=0.191  n= 325 k= 23
+             BBH: eta2=0.365  omega2=0.318  n= 325 k= 23
+      MATH Lvl 5: eta2=0.351  omega2=0.303  n= 325 k= 23
+            GPQA: eta2=0.260  omega2=0.206  n= 325 k= 23
+            MUSR: eta2=0.176  omega2=0.116  n= 325 k= 23
+        MMLU-PRO: eta2=0.373  omega2=0.327  n= 325 k= 23
+
+==============================================================================
+DOES FAMILY SURVIVE CONTROLLING FOR SCALE? (residuals of score ~ log params)
+==============================================================================
+            ALL leaderboard (n=4576) | Architecture: raw eta2=0.139 -> after size 0.184   (size alone R2=0.403)
+            ALL leaderboard (n=4576) |      lineage: raw eta2=0.107 -> after size 0.261   (size alone R2=0.455)
+  PAPER-LIKE (official & pretrained/ | Architecture: raw eta2=0.367 -> after size 0.398   (size alone R2=0.454)
+  PAPER-LIKE (official & pretrained/ |      lineage: raw eta2=0.329 -> after size 0.429   (size alone R2=0.479)
+
+==============================================================================
+THE POPULATION A PAPER ACTUALLY SAMPLES: one model per family
+  Papers citing 'N models' usually take 1-3 per family. Drawing one member
+  per lineage at random leaves, by construction, ZERO within-family variance
+  to pool -- so the relevant question is how much variance a paper FORFEITS
+  by treating its N as independent. Reported as the design effect.
+==============================================================================
+  lineage on PAPER-LIKE: eta2=0.329  ICC~=0.280  mean cluster=14.1
+  design effect = 4.68  ->  n_eff = 325/4.68 = 69.5 of 325 models
+  i.e. 325 leaderboard models carry the information of ~70 independent ones.

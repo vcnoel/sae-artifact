@@ -1,0 +1,2 @@
+rows=4576
+COLUMNS: eval_name | Precision | Type | T | Weight type | Architecture | Model | fullname | Model sha | Average ⬆️ | Hub License | Hub ❤️ | #Params (B) | Available on the hub | MoE | Flagged | Chat Template | CO₂ cost (kg) | IFEval Raw | IFEval | BBH Raw | BBH | MATH Lvl 5 Raw | MATH Lvl 5 | GPQA Raw | GPQA | MUSR Raw | MUSR | MMLU-PRO Raw | MMLU-PRO | Merged | Official Providers | Upload To Hub Date | Submission Date | Generation | Base Model

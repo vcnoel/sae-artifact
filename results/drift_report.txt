@@ -1,0 +1,70 @@
+numerical floor (same text measured twice): max drift = 0.00e+00
+
+pairs: 178   |token delta| median = 10.0%
+null match quality: median |n_null - n_target| = 0 tokens
+
+================================================================================================
+WITHIN-PAIR DRIFT vs CONTENT NULL   (semantically identical text, reformatted)
+================================================================================================
+              metric  |drift| med      p75      p90  signed med  NULL med  real/null
+------------------------------------------------------------------------------------------------
+        attn_entropy       2.95%   4.57%   6.19%     +2.95%    2.34%      1.26  [raw]
+       attn_distance      12.29%  19.26%  26.10%    +12.29%   10.12%      1.21  [raw]
+            eff_rank       9.52%  15.14%  21.15%     +9.52%    8.14%      1.17  [raw]
+        spec_entropy       3.38%   4.26%   5.25%     +3.38%    2.91%      1.16  [raw]
+              energy      16.63%  25.03%  32.88%    +16.63%   13.15%      1.26  [raw]
+   attn_entropy_norm       0.97%   1.37%   1.80%     +0.97%    2.10%      0.46  [normalised]
+  attn_distance_norm       1.93%   3.00%   4.42%     +1.65%    5.96%      0.32  [normalised]
+       eff_rank_norm       0.90%   1.55%   3.32%     -0.44%    2.58%      0.35  [normalised]
+   spec_entropy_norm       1.12%   1.70%   2.15%     +1.06%    1.82%      0.61  [normalised]
+         energy_norm       5.96%   8.16%  10.33%     +5.96%    7.71%      0.77  [normalised]
+                hfer       5.50%   8.96%  12.04%     -3.45%    4.41%      1.25  [scale-free]
+             fiedler       4.83%   8.27%  13.21%     +1.79%   19.17%      0.25  [scale-free]
+          lambda_max       0.99%   2.02%   3.62%     +0.72%    2.13%      0.47  [scale-free]
+           sink_conc       1.93%   2.50%   3.01%     -1.93%    2.39%      0.81  [scale-free]
+          smoothness       3.42%   4.02%   4.83%     +3.42%    2.33%      1.47  [scale-free]
+
+  group medians of |drift|:
+     raw (ceiling-dependent): 9.52%   (null 8.14%, ratio 1.21)
+          ceiling-normalised: 1.12%   (null 2.58%, ratio 0.46)
+                  scale-free: 3.42%   (null 2.39%, ratio 0.81)
+
+================================================================================================
+BY STRATUM: does the result survive without the NBSP operator?
+================================================================================================
+              metric       typographic only             with NBSP
+        attn_entropy         2.11% (n=78,d=6%)        4.29% (n=100,d=15%)
+       attn_distance         7.75% (n=78,d=6%)       18.06% (n=100,d=15%)
+            eff_rank         6.15% (n=78,d=6%)       14.18% (n=100,d=15%)
+        spec_entropy         2.81% (n=78,d=6%)        4.17% (n=100,d=15%)
+              energy        11.87% (n=78,d=6%)       23.03% (n=100,d=15%)
+   attn_entropy_norm         0.86% (n=78,d=6%)        1.09% (n=100,d=15%)
+  attn_distance_norm         1.83% (n=78,d=6%)        1.95% (n=100,d=15%)
+       eff_rank_norm         0.70% (n=78,d=6%)        1.26% (n=100,d=15%)
+   spec_entropy_norm         1.55% (n=78,d=6%)        0.90% (n=100,d=15%)
+         energy_norm         5.77% (n=78,d=6%)        6.15% (n=100,d=15%)
+                hfer         3.88% (n=78,d=6%)        7.85% (n=100,d=15%)
+             fiedler         4.85% (n=78,d=6%)        4.83% (n=100,d=15%)
+          lambda_max         0.60% (n=78,d=6%)        1.78% (n=100,d=15%)
+           sink_conc         1.26% (n=78,d=6%)        2.39% (n=100,d=15%)
+          smoothness         3.25% (n=78,d=6%)        3.49% (n=100,d=15%)
+
+================================================================================================
+DOSE-RESPONSE: does drift scale with the size of the segmentation change?
+  Spearman rho of |drift| against |token delta|, over all pairs.
+================================================================================================
+        attn_entropy  rho = +0.899
+       attn_distance  rho = +0.904
+            eff_rank  rho = +0.962
+        spec_entropy  rho = +0.719
+              energy  rho = +0.877
+   attn_entropy_norm  rho = +0.298
+  attn_distance_norm  rho = +0.115
+       eff_rank_norm  rho = +0.511
+   spec_entropy_norm  rho = -0.311
+         energy_norm  rho = +0.184
+                hfer  rho = +0.392
+             fiedler  rho = +0.094
+          lambda_max  rho = +0.541
+           sink_conc  rho = +0.678
+          smoothness  rho = +0.198
