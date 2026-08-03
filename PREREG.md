@@ -360,6 +360,60 @@ the direct-path reading of the gradient are wrong, and the layer-12-vs-19
 difference observed so far is noise across dictionary configurations rather than a
 depth effect.
 
+## E10 OUTCOME (run 12:08-12:33)
+
+**Convention audit: no mismatch.** `multi_dict.py` reports **feature-level**
+(per-feature median, then ratio of medians): layer 12 / L0 82 = 0.360 in both the
+sweep and E10, which is the convention the thresholds were calibrated on. The
+0.298 figure came only from the L0-fit script, which used observation-level. The
+L0 exponent +0.406 was therefore fitted on the *other* convention; the two differ
+by a non-constant factor 0.97-1.35, so that exponent carries an unquantified
+convention error. Feature-level is the convention for everything reported.
+
+**Prediction 1 (monotonicity): CONFIRMED.**
+
+| layer | remaining blocks | L0 | t+3/t0 | t+1/t0 |
+|---|---|---|---|---|
+| 5 | 20 | 68 | 0.384 | 0.521 |
+| 12 | 13 | 82 | 0.360 | 0.531 |
+| 19 | 6 | 73 | 0.078 | 0.120 |
+| 24 | 1 | 73 | 0.021 | 0.037 |
+
+Monotone decreasing across all four. Threshold misses recorded: layer 5 predicted
+>0.5, observed 0.384; layer 24 predicted <0.02, observed 0.021. Direction and order
+right, magnitudes wrong at both ends.
+
+**POWER LAW: FALSIFIED. [POST-HOC — E10 had already run when this was formulated,
+so it is not a pre-registered test.]** Exponent fitted from layers 12 and 19 alone
+(L0-corrected) is 1.91, giving out-of-sample predictions 0.760 at layer 5 and 0.003
+at layer 24. Observed 0.384 (ratio 0.51) and 0.021 (ratio 8.38) — both outside a
+1.5x tolerance, in **opposite** directions. The observed curve is flatter than a
+power law at both ends: flat from 20 to 13 remaining blocks, a knee between 13 and
+6, flat again from 6 to 1.
+
+**Consequence.** The propagation account survives only ORDINALLY. "Effect decays
+with remaining attention operations" is supported; "decays proportionally to
+remaining depth" is refuted. An earlier four-point log-log fit (+1.015, R2=0.949)
+was in-sample across a wide range and concealed the out-of-sample failure; calling
+it stronger than monotonicity was wrong.
+
+**Prediction 2 (alignment): naive expectation VIOLATED, measure not invalidated.**
+
+| layer | rho(kpn, alignment) | p |
+|---|---|---|
+| 5 | +0.358 | <1e-4 |
+| 12 | +0.339 | <1e-4 |
+| 19 | +0.031 | 0.59 |
+| 24 | +0.145 | 0.012 |
+
+Slope vs layer -0.0154 (p=0.19). The measure `sqrt(d^T C d)` is layer-independent
+by construction and should predict best where fewest blocks intervene, i.e. deepest.
+It predicts best at layers 5 and 12, where 20 and 13 blocks intervene. Layer 24 is
+positive and significant, so the measure is not dead and the catalogue's alignment
+numbers stand — but layer 19 is not a local anomaly: the shape is non-monotone
+(+0.36, +0.34, +0.03, +0.15) with a mid-network dip. **Unexplained, now on four
+points rather than two.**
+
 ## Standing scope constraint
 
 The four artifacts apply to **ablation-based** causal-effect metrics (zero or

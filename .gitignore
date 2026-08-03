@@ -5,3 +5,7 @@ logs/
 nohup.out
 __pycache__/
 *.pyc
+paper/*.aux
+paper/*.log
+paper/*.out
+paper/build*.log
