@@ -70,10 +70,10 @@ def report(t, r, label):
 
 
 def main():
-    df = pd.read_csv("eval_saes.csv")
+    df = pd.read_csv("results/eval_saes.csv")
     f = (df.groupby(["arm", "fid"])
          .agg(kpn=("kl_per_norm", "median")).reset_index())
-    sd = torch.load("saes.pt", map_location="cpu")
+    sd = torch.load("data/saes.pt", map_location="cpu")
     Ds, parts = [], []
     for arm in ("trained", "frozen"):
         w = sd[arm]["W_dec"].float()

@@ -116,7 +116,7 @@ def main():
     ap.add_argument("--n_seq", type=int, default=64)
     ap.add_argument("--n_feat", type=int, default=300)
     ap.add_argument("--n_pos", type=int, default=4)
-    ap.add_argument("--out", default="multi_dict.csv")
+    ap.add_argument("--out", default="results/multi_dict.csv")
     a = ap.parse_args()
 
     tok = AutoTokenizer.from_pretrained(MODEL)

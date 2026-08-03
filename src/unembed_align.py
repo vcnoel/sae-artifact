@@ -71,7 +71,7 @@ def tail(v):
 
 
 def main():
-    df = pd.read_csv("sae_rare.csv")
+    df = pd.read_csv("results/sae_rare.csv")
     f = (df.groupby(["kind", "fid"])
          .agg(kpn=("kl_per_norm", "median")).reset_index())
     T = f[f.kind == "trained"].copy()

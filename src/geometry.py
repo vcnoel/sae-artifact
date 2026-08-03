@@ -73,8 +73,8 @@ def main():
     rows.append(stats_of(R, "random_matched"))
 
     # --- my two arms, if trained yet ---
-    if os.path.exists("saes.pt"):
-        sd = torch.load("saes.pt", map_location=DEV)
+    if os.path.exists("data/saes.pt"):
+        sd = torch.load("data/saes.pt", map_location=DEV)
         for arm in ("trained", "frozen"):
             if arm in sd and "W_dec" in sd[arm]:
                 rows.append(stats_of(sd[arm]["W_dec"].float().to(DEV),

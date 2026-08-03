@@ -74,7 +74,7 @@ def ratio_ci(t, r):
 
 
 def main():
-    df = pd.read_csv("sae_rare.csv")
+    df = pd.read_csv("results/sae_rare.csv")
     f = (df.groupby(["kind", "fid"])
          .agg(kpn=("kl_per_norm", "median")).reset_index())
     T, R = f[f.kind == "trained"].copy(), f[f.kind == "random"].copy()

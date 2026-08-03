@@ -134,7 +134,7 @@ def main():
     ap.add_argument("--n_seq", type=int, default=96)
     ap.add_argument("--per_bin", type=int, default=40)
     ap.add_argument("--n_pos", type=int, default=6)
-    ap.add_argument("--out", default="sae_rare.csv")
+    ap.add_argument("--out", default="results/sae_rare.csv")
     a = ap.parse_args()
 
     torch.manual_seed(0)

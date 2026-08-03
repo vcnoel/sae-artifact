@@ -71,7 +71,7 @@ def tail(v):
 
 
 def main():
-    src = sys.argv[1] if len(sys.argv) > 1 else "sae_rare.csv"
+    src = sys.argv[1] if len(sys.argv) > 1 else "results/sae_rare.csv"
     df = pd.read_csv(src)
     f = (df.groupby(["kind", "fid"])
          .agg(kpn=("kl_per_norm", "median"), freq=("freq", "first"))

@@ -67,11 +67,11 @@ def maxcos(D, fids):
 
 
 def main():
-    df = pd.read_csv("eval_saes.csv")
+    df = pd.read_csv("results/eval_saes.csv")
     f = (df.groupby(["arm", "fid"])
          .agg(kpn=("kl_per_norm", "median"), kl=("kl", "median"),
               freq=("freq", "first")).reset_index())
-    sd = torch.load("saes.pt", map_location="cpu")
+    sd = torch.load("data/saes.pt", map_location="cpu")
     W = {}
     for arm in ("trained", "frozen"):
         w = sd[arm]["W_dec"].float()

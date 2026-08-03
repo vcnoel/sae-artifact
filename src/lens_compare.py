@@ -98,7 +98,7 @@ def main():
         "layer_12/width_16k/average_l0_82/params.npz"))
     W = torch.tensor(z["W_dec"], dtype=torch.float32)
     dicts["gemma_scope"] = W / W.norm(dim=-1, keepdim=True)
-    sd = torch.load("saes.pt", map_location="cpu")
+    sd = torch.load("data/saes.pt", map_location="cpu")
     for arm in ("trained", "frozen"):
         w = sd[arm]["W_dec"].float()
         dicts[f"mine_{arm}"] = w / w.norm(dim=-1, keepdim=True)

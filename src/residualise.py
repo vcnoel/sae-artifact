@@ -33,7 +33,7 @@ from huggingface_hub import hf_hub_download
 from scipy import stats
 
 torch.set_num_threads(8)
-SRC = sys.argv[1] if len(sys.argv) > 1 else "sae_rare.csv"
+SRC = sys.argv[1] if len(sys.argv) > 1 else "results/sae_rare.csv"
 B = 4000
 rng = np.random.default_rng(0)
 EPS = 1e-9

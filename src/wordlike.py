@@ -72,15 +72,15 @@ def main():
         "layer_12/width_16k/average_l0_82/params.npz"))
     W = torch.tensor(z["W_dec"], dtype=torch.float32)
     dicts["gemma_scope"] = W / W.norm(dim=-1, keepdim=True)
-    sd = torch.load("saes.pt", map_location="cpu")
+    sd = torch.load("data/saes.pt", map_location="cpu")
     w = sd["trained"]["W_dec"].float()
     dicts["mine_trained"] = w / w.norm(dim=-1, keepdim=True)
 
     # the populations the adjustments were fit on
     samp = {}
-    gs = pd.read_csv("sae_rare.csv")
+    gs = pd.read_csv("results/sae_rare.csv")
     samp["gemma_scope"] = sorted(gs[gs.kind == "trained"].fid.unique())
-    ev = pd.read_csv("eval_saes.csv")
+    ev = pd.read_csv("results/eval_saes.csv")
     samp["mine_trained"] = sorted(ev[ev.arm == "trained"].fid.unique())
 
     def wl_of(D, fids, al, k=20):

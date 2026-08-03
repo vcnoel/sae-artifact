@@ -115,7 +115,7 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--tokens", type=int, default=20_000_000)
     ap.add_argument("--lr", type=float, default=3e-4)
-    ap.add_argument("--out", default="saes.pt")
+    ap.add_argument("--out", default="data/saes.pt")
     # Arms are trained SEQUENTIALLY by default now. Training both at once put
     # peak GPU memory at 15.96/16.38 GB, which on WDDM spills to host RAM and
     # collapsed throughput (100% reported utilisation at 41 C, no progress for

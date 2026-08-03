@@ -35,10 +35,10 @@ torch.set_num_threads(8)
 
 
 def main():
-    df = pd.read_csv("eval_saes.csv")
+    df = pd.read_csv("results/eval_saes.csv")
     f = (df[df.arm == "trained"].groupby("fid")
          .agg(kpn=("kl_per_norm", "median")).reset_index())
-    sd = torch.load("saes.pt", map_location="cpu")
+    sd = torch.load("data/saes.pt", map_location="cpu")
     W = sd["trained"]["W_dec"].float()
     W = W / W.norm(dim=-1, keepdim=True)
     ids = torch.tensor(f.fid.values, dtype=torch.long)

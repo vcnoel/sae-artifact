@@ -29,7 +29,7 @@ B = 2000
 
 def main():
     # ---------- (1) EV trajectory ----------
-    txt = io.open("chain.log", encoding="utf-8", errors="replace").read()
+    txt = io.open("logs/chain.log", encoding="utf-8", errors="replace").read()
     rows = []
     for m in re.finditer(r"([\d.]+)M tok \| (\w+): mse=([\d.]+) ev=([\-\d.]+)",
                          txt):
@@ -58,7 +58,7 @@ def main():
     print(f"  (eval-corpus gap for reference: 0.830 - 0.788 = 0.042)")
 
     # ---------- (2) Hodges-Lehmann ----------
-    df = pd.read_csv("eval_saes.csv")
+    df = pd.read_csv("results/eval_saes.csv")
     f = (df.groupby(["arm", "fid"])
          .agg(kpn=("kl_per_norm", "median")).reset_index())
     t = f[f.arm == "trained"].kpn.to_numpy()

@@ -68,11 +68,11 @@ def kl_batch(model, ids, pos, vecs, bs=6):
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--ckpt", default="saes.pt")
+    ap.add_argument("--ckpt", default="data/saes.pt")
     ap.add_argument("--n_seq", type=int, default=96)
     ap.add_argument("--per_bin", type=int, default=40)
     ap.add_argument("--n_pos", type=int, default=6)
-    ap.add_argument("--out", default="eval_saes.csv")
+    ap.add_argument("--out", default="results/eval_saes.csv")
     a = ap.parse_args()
 
     tok = AutoTokenizer.from_pretrained(MODEL)

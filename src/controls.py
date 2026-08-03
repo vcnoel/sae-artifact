@@ -59,7 +59,7 @@ def main():
     print("=" * 78)
     print("CONTROL 1: does the causal tail coincide with near-duplicate pairs?")
     print("=" * 78)
-    df = pd.read_csv("sae_rare.csv")
+    df = pd.read_csv("results/sae_rare.csv")
     f = (df[df.kind == "trained"].groupby("fid")
          .agg(kl=("kl", "median"), kpn=("kl_per_norm", "median"),
               freq=("freq", "first")).reset_index())
