@@ -171,15 +171,27 @@ ablation-based measurements are sensitive to unembedding alignment at
 $\rho\approx0.3$, and that within realistic samples this alignment reflects
 semantic content.
 
-\textbf{An unexplained depth dependence.} Alignment predicts causal mass at
-$\rho=+0.358$ (layer 5), $+0.339$ (layer 12), $+0.031$ (layer 19) and $+0.145$
-(layer 24). Because $C$ is layer-independent by construction, the measure
-estimates the logit effect a direction \emph{would} have if it reached the output
-unchanged, so it should predict best where fewest blocks intervene --- deepest.
-It predicts best at layers 5 and 12, where $20$ and $13$ blocks intervene. The
-compressed-variance explanation is falsified: alignment spread is equal across
-depths (CV $0.1175$ vs $0.1091$) and causal-mass spread is greater at layer 19.
-We report this as unexplained.
+\textbf{An unexplained depth dependence.} Because $C$ is layer-independent by
+construction, the measure estimates the logit effect a direction \emph{would} have
+if it reached the output unchanged, so it should predict best where fewest blocks
+intervene --- deepest. It does the opposite. Alignment predicts causal mass with
+$\rho=\RhoLFive$ at layer 5 and $\RhoLOneTwo$ at layer 12, against $\RhoLOneNine$
+at layer 19 and $\RhoLTwoFour$ at layer 24 ($n=\DepthNLFive$ per depth).
+
+At $n=300$ a Spearman correlation of $0.3$ carries a $95\%$ interval of about
+$\pm\RhoCIHalf$, so the two shallow estimates are indistinguishable from each
+other and so, marginally, are the two deep ones. We therefore test the trend
+rather than describe the sequence: pooling by Fisher $z$ gives
+$\rho=\RhoShallow$ for the shallow pair and $\rho=\RhoDeep$ for the deep pair, a
+contrast of $z=\RhoContrastZ$ ($p=\RhoContrastP$), and a weighted regression of
+$z$ on layer index has slope $\RhoSlopePerLayer$ per layer where the measure's
+construction predicts a positive slope. The pattern is a decrease with depth, not
+a mid-network dip with recovery.
+
+The compressed-variance explanation is falsified: alignment spread is equal across
+depths (CV $0.1175$ against $0.1091$) and causal-mass spread is \emph{greater} at
+layer 19. We report the dependence as unexplained; it is a violation of the
+measure's own construction rather than an observation about the model.
 
 \subsection{Position in sequence}
 \textbf{Mechanism.} Effects are measured at each latent's top-activating
@@ -247,16 +259,24 @@ Measuring \eqref{eq:kl} at $t$ and $t{+}3$ across four depths at matched width a
 approximately matched sparsity gives $\mathrm{KL}_{t+3}/\mathrm{KL}_t$ of
 $\DepthRatioLFive$ (layer 5, $20$ blocks remaining), $\DepthRatioLOneTwo$ (layer 12,
 $13$), $\DepthRatioLOneNine$ (layer 19, $6$) and $\DepthRatioLTwoFour$ (layer 24, $1$),
-with $n=\DepthNLFive$ latents per depth. The ordering is monotone, consistent with
-the perturbation having fewer remaining attention operations through which to
-propagate.
+with $n=\DepthNLFive$ latents per depth. The effect itself is large and not in
+doubt: a span of $\DepthSpan\times$ from shallowest to deepest.
 
-Quantitatively the account fails. An exponent fitted from layers 12 and 19 alone
-predicts $0.760$ at layer 5 and $0.003$ at layer 24, against observed
-$\DepthRatioLFive$ and $\DepthRatioLTwoFour$ --- errors of $0.51\times$ and $8.4\times$ in
-opposite directions. The observed curve is flat between $20$ and $13$ remaining
-blocks, falls sharply between $13$ and $6$, and flattens again. So decay with
-remaining depth is supported \emph{ordinally} and refuted as a power law.
+The \emph{attribution} to propagation limits is much weaker, and we state it as
+such. We pre-registered three predictions of decreasing strength. A power law in
+remaining depth, fitted from layers 12 and 19 and tested out of sample with a
+factor-of-$1.5$ tolerance, predicts $0.760$ at layer 5 and $0.003$ at layer 24
+against observed $\DepthRatioLFive$ and $\DepthRatioLTwoFour$ --- misses of
+$0.51\times$ and $8.4\times$, in opposite directions, so the curve is flatter than
+proportional at both ends. Two threshold predictions, $>\!0.5$ at layer 5 and
+$<\!0.02$ at layer 24, also both failed. Only bare monotone ordering survived, and
+on four points that is worth $p\approx\DepthOrderP$ under a random-permutation
+null.
+
+So: $\mathrm{KL}_{t+3}/\mathrm{KL}_t$ declines with depth by a factor of
+$\DepthSpan$; the propagation account predicts this ordinally at
+$p\approx\DepthOrderP$ and is falsified as a proportionality in both directions.
+The decline is solid, the mechanism is not established.
 
 \paragraph{Consequence for \S\ref{sec:align}.} Because this gradient is a
 propagation effect, it is not evidence that deeper layers are more direct-path
