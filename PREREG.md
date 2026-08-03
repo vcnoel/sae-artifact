@@ -309,11 +309,47 @@ layer 12, 7 at layer 19, 2 at layer 24. Observed so far: ~0.38 at layer 12 and
 ~0.10 at layer 19. Predicted: **layer 5 above 0.5, layer 24 below 0.02**, and the
 four points monotone decreasing in depth.
 
-**Prediction 2 (alignment), fixed in advance.** No directional prediction is
-justified, since the layer-19 null is unexplained. The question is the SHAPE: is
-the layer-12-to-19 change a threshold or a gradient? Four depths distinguish them.
-A monotone gradient with a sign change in the middle would be a more interesting
-finding than either a threshold or a constant.
+**The L0 confound is BOUNDED, not merely flagged.** The sweep gives the
+within-layer L0 dependence of the exact quantity E10 measures, at matched 16k
+width:
+
+| layer | L0 | t+3/t0 |
+|---|---|---|
+| 12 | 22 | 0.204 |
+| 12 | 82 | 0.298 |
+| 12 | 445 | 0.468 |
+| 19 | 23 | 0.029 |
+| 19 | 73 | 0.059 |
+| 19 | 279 | 0.129 |
+
+Monotone increasing in L0 at both depths. Power-law exponent: +0.276 at layer 12,
++0.594 at layer 19, **+0.406 pooled with a layer fixed effect**. The E10 grid spans
+L0 68-82, a ratio of 1.206, so expected L0-induced movement is
+1.206^0.44 = **8.5%** — against a predicted depth effect spanning 0.5 to 0.02, a
+factor of 25 (2400%). **The confound is ~283x smaller than the effect under test.**
+
+(Convention note: these ratios are ratio-of-medians. An earlier report used
+median-of-per-feature-ratios and gave 0.360 rather than 0.298 at layer 12 / L0 82.
+Same conclusions; one convention must be used throughout.)
+
+**Prediction 2 (alignment) — there IS a naive prediction, and the data already
+violates it.** The alignment measure is `sqrt(d^T C d)` with `C` the embedding
+covariance, so it is **layer-independent by construction**. What it estimates is
+"how much this direction would move the logits if it reached the output
+unchanged". At layer 5 a direction passes through 21 more blocks before the
+unembedding, so embedding-space alignment should be a POOR predictor of its real
+logit effect; at layer 24 only two blocks intervene, so it should be a GOOD one.
+
+So the naive expectation is **rho(kpn, alignment) increasing monotonically with
+depth**. Observed: +0.33 at layer 12 and -0.05 at layer 19 — not merely absent
+deeper in, but moving the *wrong way against the measure's own construction*.
+That makes this arm sharper than "threshold or gradient":
+
+- If layer 24 is strongly positive, layer 19 is a local anomaly and the measure
+  behaves as constructed.
+- If layer 24 is also null or negative, the measure is **not doing what its
+  construction implies**, and that is a finding about the measure rather than about
+  the model — and it would undercut every alignment number in this project.
 
 **Falsification.** If layer 5 comes in below layer 12, or layer 24 above layer 19,
 the propagation reading is wrong and the t+3 gradient needs a different account
