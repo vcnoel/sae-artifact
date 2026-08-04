@@ -20,8 +20,11 @@ at chance. That is computed here for both dictionaries.
 import io
 import sys
 
-sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8",
-                              errors="replace")
+# idempotent: importing a module that also wraps stdout would otherwise close
+# the already-wrapped stream (ValueError: I/O operation on closed file)
+if getattr(sys.stdout, "encoding", "").lower() not in ("utf-8", "utf8"):
+    sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8",
+                                  errors="replace")
 
 import numpy as np
 import pandas as pd

@@ -9,3 +9,8 @@ paper/*.aux
 paper/*.log
 paper/*.out
 paper/build*.log
+
+# reference copies of other papers (not our output; don't version-control
+# someone else's PDF)
+paper/reliability.pdf
+/st.pdf

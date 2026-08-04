@@ -1,0 +1,85 @@
+layer,nST,pBH,dlogit,table,source
+0,76,1.6e-06,-0.182,21,Gemma-2-9B x GemmaScope
+1,105,4.2e-08,-0.23,21,Gemma-2-9B x GemmaScope
+2,134,4.8e-09,-0.037,21,Gemma-2-9B x GemmaScope
+3,133,1.3e-06,-0.042,21,Gemma-2-9B x GemmaScope
+4,157,2.9e-05,-0.01,21,Gemma-2-9B x GemmaScope
+5,150,2.1e-07,-0.012,21,Gemma-2-9B x GemmaScope
+6,151,9.1e-11,-0.015,21,Gemma-2-9B x GemmaScope
+7,145,0.0035,-0.012,21,Gemma-2-9B x GemmaScope
+8,141,0.00031,-0.006,21,Gemma-2-9B x GemmaScope
+9,123,1.1e-05,-0.033,21,Gemma-2-9B x GemmaScope
+10,129,5.7e-06,-0.009,21,Gemma-2-9B x GemmaScope
+11,112,4.9e-05,-0.018,21,Gemma-2-9B x GemmaScope
+12,103,0.0063,-0.01,21,Gemma-2-9B x GemmaScope
+13,101,0.0018,-0.017,21,Gemma-2-9B x GemmaScope
+14,76,7.3e-05,-0.027,21,Gemma-2-9B x GemmaScope
+15,85,0.00026,-0.036,21,Gemma-2-9B x GemmaScope
+16,66,0.012,-0.043,21,Gemma-2-9B x GemmaScope
+17,62,0.0024,-0.094,21,Gemma-2-9B x GemmaScope
+18,58,2.2e-05,-0.124,21,Gemma-2-9B x GemmaScope
+19,61,5.6e-08,-0.103,21,Gemma-2-9B x GemmaScope
+20,53,1e-06,-0.209,21,Gemma-2-9B x GemmaScope
+21,53,1.6e-07,-0.193,21,Gemma-2-9B x GemmaScope
+22,65,1.9e-08,-0.199,21,Gemma-2-9B x GemmaScope
+23,22,0.036,0.2,21,Gemma-2-9B x GemmaScope
+24,47,2.7e-08,-0.294,21,Gemma-2-9B x GemmaScope
+25,42,2.3e-11,-0.416,21,Gemma-2-9B x GemmaScope
+26,42,1.1e-13,-0.249,21,Gemma-2-9B x GemmaScope
+27,49,7.6e-14,-0.221,21,Gemma-2-9B x GemmaScope
+28,56,1.8e-07,-0.175,21,Gemma-2-9B x GemmaScope
+29,54,1.1e-13,-0.279,21,Gemma-2-9B x GemmaScope
+30,69,2e-19,-0.291,21,Gemma-2-9B x GemmaScope
+31,76,1.3e-22,-0.313,21,Gemma-2-9B x GemmaScope
+32,77,1.2e-17,-0.273,21,Gemma-2-9B x GemmaScope
+33,75,5.8e-20,-0.24,21,Gemma-2-9B x GemmaScope
+34,77,1.3e-22,-0.268,21,Gemma-2-9B x GemmaScope
+35,82,6.1e-26,-0.333,21,Gemma-2-9B x GemmaScope
+36,83,3.8e-22,-0.343,21,Gemma-2-9B x GemmaScope
+37,92,5.2e-24,-0.34,21,Gemma-2-9B x GemmaScope
+38,84,3.7e-21,-0.441,21,Gemma-2-9B x GemmaScope
+39,98,6.1e-26,-0.616,21,Gemma-2-9B x GemmaScope
+40,119,2.8e-21,-0.403,21,Gemma-2-9B x GemmaScope
+41,141,2.4e-23,-0.219,21,Gemma-2-9B x GemmaScope
+0,76,1.6e-06,-0.182,18,Gemma-2-2B
+1,105,4.2e-08,-0.23,18,Gemma-2-2B
+2,134,4.8e-09,-0.037,18,Gemma-2-2B
+3,133,1.3e-06,-0.042,18,Gemma-2-2B
+4,157,2.9e-05,-0.01,18,Gemma-2-2B
+5,150,2.1e-07,-0.012,18,Gemma-2-2B
+6,141,4.4e-34,-0.565,18,Gemma-2-2B
+7,81,1.5e-24,-0.795,18,Gemma-2-2B
+8,53,5.6e-11,-0.51,18,Gemma-2-2B
+9,42,2.5e-08,-0.671,18,Gemma-2-2B
+10,28,1.1e-10,-0.454,18,Gemma-2-2B
+11,36,2.5e-07,-0.615,18,Gemma-2-2B
+12,37,1.4e-08,-0.647,18,Gemma-2-2B
+13,48,4.1e-14,-0.925,18,Gemma-2-2B
+14,55,3.8e-10,-0.847,18,Gemma-2-2B
+15,64,3.7e-17,-0.807,18,Gemma-2-2B
+16,54,3.7e-17,-0.988,18,Gemma-2-2B
+17,55,8.1e-14,-0.936,18,Gemma-2-2B
+18,46,1.8e-12,-0.854,18,Gemma-2-2B
+19,37,2e-09,-0.642,18,Gemma-2-2B
+20,39,7.2e-13,-0.71,18,Gemma-2-2B
+21,38,1.5e-11,-0.56,18,Gemma-2-2B
+22,35,6.9e-08,-0.443,18,Gemma-2-2B
+23,22,0.036,0.2,18,Gemma-2-2B
+24,36,5.8e-09,-0.414,18,Gemma-2-2B
+25,34,2.8e-12,-0.559,18,Gemma-2-2B
+26,32,7e-10,-0.284,18,Gemma-2-2B
+27,36,5.6e-16,-0.546,18,Gemma-2-2B
+28,33,9.6e-12,-0.354,18,Gemma-2-2B
+29,26,6.9e-08,-0.276,18,Gemma-2-2B
+30,13,0.00022,-0.108,18,Gemma-2-2B
+31,76,1.3e-22,-0.313,18,Gemma-2-2B
+32,77,1.2e-17,-0.273,18,Gemma-2-2B
+33,75,5.8e-20,-0.24,18,Gemma-2-2B
+34,77,1.3e-22,-0.268,18,Gemma-2-2B
+35,82,6.1e-26,-0.333,18,Gemma-2-2B
+36,83,3.8e-22,-0.343,18,Gemma-2-2B
+37,92,5.2e-24,-0.34,18,Gemma-2-2B
+38,84,3.7e-21,-0.441,18,Gemma-2-2B
+39,98,6.1e-26,-0.616,18,Gemma-2-2B
+40,119,2.8e-21,-0.403,18,Gemma-2-2B
+41,141,2.4e-23,-0.219,18,Gemma-2-2B

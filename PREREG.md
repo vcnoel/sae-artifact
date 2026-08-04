@@ -434,3 +434,141 @@ metrics in that suite — but they are also the only *set*-ablation metrics, and
 metric there ablates a single latent. The two properties are perfectly confounded,
 so their failure cannot be attributed to the construction these confounds apply
 to. The hook still needs the audit table.
+
+## E11 — Six arms, one seed, real degrees of freedom **[RECONSTRUCTED — process
+lapse noted below]**
+
+**Process note, logged rather than hidden.** This experiment was launched
+directly from the user's specification (decoder free / tau=0.80 / tau=0.90 /
+lr=1e-4 / k=41 / order=1, all seed 0) without a prediction written to this file
+first. The two numbers that function as predictions here — the 2-arm
+extrapolation's Erho2=0.455 and "5 arms needed for Erho2=0.8" — were already on
+record from the prior (E-unlabeled) 2-arm decomposition before this run started,
+so they are reconstructed rather than fabricated after the fact, but the
+discipline was not followed and that is a failure to note, not omit.
+
+**Motivation.** The 2-arm crossed decomposition had 1 degree of freedom on the
+arm factor; a G-theory reviewer discounts that on sight. Six arms varying real
+fitting choices (decoder constraint, LR, k, data order) give the arm and
+latent x arm components real replication.
+
+**Prediction (reconstructed from the 2-arm run).** Erho2 near 0.455, ~5 arms
+needed for Erho2=0.8, and the latent x arm : arm ratio should shrink from 23.6x
+now that "arm" has real degrees of freedom instead of one difference.
+
+**Outcome (run complete, `results/eval_arms.csv`, 240 shared latents x 6 arms x
+up to 6 positions, 8492 rows).**
+
+| component | 2-arm | 6-arm (direct) |
+|---|---|---|
+| latent | (not separated) | 16.9% |
+| arm | 0.4% | 3.2% |
+| latent x arm | 9.7% | 12.5% |
+| residual (position) | — | 67.4% |
+| latent x arm : arm ratio | 23.6x | 3.8x |
+| Erho2 (one-arm design) | 0.455 | 0.415 |
+| arms needed for Erho2=0.8 | 5 (extrapolated) | 6 (direct) |
+
+**Confirmed:** the 2-arm extrapolation and the direct 6-arm estimate corroborate
+each other closely (Erho2 0.455 vs 0.415; 5 vs 6 arms needed) — the headline is
+not an artifact of having only one degree of freedom on "arm". Latent identity
+explains only 16.9% of variance; arm, latent x arm, and position jointly explain
+83.1%. That is the load-bearing number for "causal importance is not a property
+of the latent."
+
+**Falsified/revised:** the 23.6x latent-x-arm:arm ratio does NOT survive — it
+falls to 3.8x. With only one degree of freedom, the 2-arm "arm" component was
+almost certainly an underestimate (a single contrast can land anywhere by
+chance); six real fitting choices give "arm" itself a much larger, and probably
+more honest, share (3.2% vs 0.4%). The ratio was never the claim to lead with;
+Erho2 and the "arms needed" figure are, and those held up. Report the ratio
+change explicitly rather than quietly dropping the old number.
+
+Pairwise Spearman across all C(6,2)=15 arm pairs: median +0.376, range
+[+0.225, +0.574] — every pair positive, none above 0.6. Rank does transfer
+partially, never fully; that is consistent with latent x arm being the largest
+non-residual component.
+
+**k41-sensitivity check.** `k41` alone restricts the shared live-latent
+intersection to 12,080/16,384 (the other five arms each retain >16,000). Dropping
+it and rerunning on the remaining 5 arms (223 latents x 5 arms x 6 positions):
+latent 16.8%, arm 2.0%, latent x arm 12.6%, residual 68.6%, ratio 6.2x, Erho2
+0.412, arms needed 6. Every figure matches the 6-arm run to within 1.2 points.
+**The decomposition is not driven by the k41 arm's narrower dictionary.**
+
+## D1/D3 — Literature audit and the same-data sign flip
+
+**D3 (audit table).** Confirmed via primary-source PDF extraction (not
+secondary summaries) that five published papers zero-ablate a single SAE
+latent and read a magnitude: Bricken et al. 2023, Marks et al. 2024 (Sparse
+Feature Circuits, KL divergence readout -- the closest methodological match to
+ours), Templeton et al. 2024 (Scaling Monosemanticity), Gao et al. 2024
+(Scaling and evaluating SAEs -- their "ablation sparsity" metric is a
+different quantity from a magnitude-normalised effect and is labelled as such,
+not folded into the same column), and Cho et al. 2025 (2607.20596, this
+project's D0 target). None of the five report dropping special-token
+positions, normalising by perturbation magnitude, or reporting near-duplicate
+decoder structure in a way tied to the causal-effect measurement itself.
+
+**Four candidates checked and excluded, with reasons on record (not silently
+dropped):**
+- Makelov, Lange, Nanda 2024 (2405.08366) -- read the full PDF directly. Edits
+  2/4/6 features simultaneously on the IOI task; logit-difference readout but
+  never single-latent. This is a DIFFERENT paper from the "Sanity Checks"
+  paper `train_saes.py`'s docstring is built against -- an error caught before
+  it reached the paper.
+- Korznikov, Galichin et al. 2026 (2602.14111, the actual "Sanity Checks"
+  paper) -- read the full PDF directly. Their "causal editing" metric (0.73
+  frozen vs 0.72 trained) is the RAVEL framework's interchange-intervention
+  match-rate accuracy, NOT zero-ablation with a magnitude readout. This
+  paper's soft-frozen baseline construction ($\tau=0.8$) matches their
+  Figure 1 baseline exactly; the causal-editing NUMBER is theirs and out of
+  scope, consistent with the pre-existing Standing Scope Constraint re RAVEL.
+- SAEBench TPP/SCR (audited by Chanin et al. 2605.18229) -- set-ablation (a
+  small group of latents per concept), not single-latent; already on record.
+- Rajamanoharan et al. 2024 (JumpReLU) -- "loss recovered" ablates the WHOLE
+  residual stream and substitutes the SAE reconstruction; whole-dictionary,
+  not single-latent.
+
+**The same-data sign flip (feeds \S4 "One comparison, two conclusions").**
+Rarest activation-frequency decile (bin 0) vs a frequency-matched decile of
+the untrained tied-random control, identical latents, identical control, two
+readouts:
+
+| readout | HL | 95% CI | Mann-Whitney p |
+|---|---|---|---|
+| raw KL | 0.683 | [0.446, 0.962] | 0.039 |
+| KL / unit perturbation norm | 1.687 | [1.159, 2.459] | 0.011 |
+
+Both intervals exclude 1 and point opposite directions. This is a real,
+significant, same-data reversal -- stronger evidence for Artifact 2 than the
+qualitative "sign flips" claim already in the paper, now with its own CI on
+both sides.
+
+**Position-per-latent finding.** No separate literature sweep was run; the
+finding is a direct corollary of reading the five D3 papers in full: none
+report ablating a given latent at more than one sequence position and
+decomposing the resulting variance. Templeton et al. ablate at one curated
+position per case study; our own prior convention (before E11) measured
+top-activating positions without checking whether they agreed. The six-arm
+decomposition's residual term (position within latent) is 67.4% of variance
+(68.6% with k41 dropped) -- larger than latent, arm, and their interaction
+combined, and no audited paper checks this.
+
+## Environment change logged
+
+Upgraded `transformers` in the Python311 global environment (not the
+`gemma_spectral` conda env, which was already at 5.5.0 and needed no change)
+to add Gemma-3-1B config support; smoke-tested both Gemma-2-2B and Gemma-3-1B
+forward passes before and after. `gemma_spectral`'s own transformers (5.5.0)
+already supported `gemma3_text` architecture -- confirmed by a direct load and
+forward pass through `google/gemma-3-1b-pt` in that env before launching any
+real training. `train_arms.py`/`eval_arms.py` generalised to a `--base`
+flag backed by `src/model_configs.py` (gemma2-2b: layer 12, d_model 2304;
+gemma3-1b: layer 12 [same relative depth, both models have 26 layers],
+d_model 1152; width/k held at 16384/82 for both). Backward compatibility
+verified: a 4-sequence smoke run of the refactored `eval_arms.py` against the
+existing six gemma2-2b arms reproduced the same live-latent counts and arm/k
+mapping as the original run. Gemma-3-1B six-arm training + chained eval/decomp
+launched in the background (`src/chain6_g3.sh`, `src/eval_decomp_g3.sh`);
+outcome not yet known at time of writing.

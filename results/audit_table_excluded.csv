@@ -1,0 +1,5 @@
+paper,year,readout,reason_excluded
+"Makelov, Lange, Nanda; Towards Principled Evaluations of SAEs",2024,"logit-difference readout, but edits 2/4/6 features simultaneously (IOI circuit editing)","multi-feature intervention, not single-latent"
+"Karvonen et al. SAEBench (TPP/SCR metrics)",2025,"zero-ablates a small set of latents per class/concept, probe-accuracy readout","set ablation of multiple latents per concept, not single-latent (confirmed via Chanin et al. 2605.18229 audit of these two metrics)"
+"Korznikov, Galichin et al.; Sanity Checks for SAEs: Do SAEs Beat Random Baselines?",2026,"causal editing evaluated via RAVEL framework, match-rate accuracy under interchange intervention","interchange-intervention/match-rate metric, not zero-ablation with a magnitude readout; this is the RAVEL family explicitly out of scope per this paper's own standing scope constraint"
+"Rajamanoharan et al.; JumpReLU SAEs",2024,"loss recovered relative to zero-ablating the full residual stream and substituting SAE reconstruction","whole-dictionary substitution, not single-latent ablation"
