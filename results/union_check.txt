@@ -1,0 +1,110 @@
+============================================================================================
+gemma2-2b  (n_seq 384)
+============================================================================================
+rule                    latents  latent x arm    Erho2    paired gain vs per-arm
+per-arm                      93          7.6%    0.738                        --
+shared (min-gated)           93          0.0%    0.869   +0.130 [+0.074, +0.208]
+union (mean)                 64          0.0%    0.901   +0.085 [+0.037, +0.151]
+
+  retention: min-gated 131 latents, union 118
+
+  PRE-REGISTERED PREDICTIONS (PREREG.md E28)
+    P1 retention falls under union: True
+    P2 union interaction below 5%: True  (0.0%)
+    P3 union collapse weaker than min-gated: False  (0.0% vs 0.0%)
+
+    VERDICT: collapse survives. Position control, not candidate
+    selection, is what removes the interaction.
+
+============================================================================================
+gemma3-1b  (n_seq 384)
+============================================================================================
+rule                    latents  latent x arm    Erho2    paired gain vs per-arm
+per-arm                      53         11.9%    0.634                        --
+shared (min-gated)           53          2.4%    0.767   +0.138 [+0.024, +0.290]
+union (mean)                 36          6.3%    0.755   +0.037 [-0.046, +0.171]
+
+  retention: min-gated 85 latents, union 66
+
+  PRE-REGISTERED PREDICTIONS (PREREG.md E28)
+    P1 retention falls under union: True
+    P2 union interaction below 5%: False  (6.3%)
+    P3 union collapse weaker than min-gated: True  (6.3% vs 2.4%)
+
+    VERDICT: partial. Some of the collapse was selection. Report
+    both rules; the union figure is the conservative headline and
+    section 5 becomes a range across two arm-symmetric rules.
+
+============================================================================================
+qwen35-2b  (n_seq 384)
+============================================================================================
+rule                    latents  latent x arm    Erho2    paired gain vs per-arm
+per-arm                     106         11.9%    0.604                        --
+shared (min-gated)          106          0.0%    0.808   +0.201 [+0.128, +0.283]
+union (mean)                 84          0.0%    0.846   +0.177 [+0.101, +0.266]
+
+  retention: min-gated 149 latents, union 132
+
+  PRE-REGISTERED PREDICTIONS (PREREG.md E28)
+    P1 retention falls under union: True
+    P2 union interaction below 5%: True  (0.0%)
+    P3 union collapse weaker than min-gated: False  (0.0% vs 0.0%)
+
+    VERDICT: collapse survives. Position control, not candidate
+    selection, is what removes the interaction.
+
+============================================================================================
+olmo2-1b  (n_seq 384)
+============================================================================================
+rule                    latents  latent x arm    Erho2    paired gain vs per-arm
+per-arm                      93          8.9%    0.542                        --
+shared (min-gated)           93          0.0%    0.807   +0.259 [+0.144, +0.390]
+union (mean)                 66          0.0%    0.824   +0.279 [+0.174, +0.413]
+
+  retention: min-gated 139 latents, union 126
+
+  PRE-REGISTERED PREDICTIONS (PREREG.md E28)
+    P1 retention falls under union: True
+    P2 union interaction below 5%: True  (0.0%)
+    P3 union collapse weaker than min-gated: False  (0.0% vs 0.0%)
+
+    VERDICT: collapse survives. Position control, not candidate
+    selection, is what removes the interaction.
+
+============================================================================================
+smollm3-3b  (n_seq 384)
+============================================================================================
+rule                    latents  latent x arm    Erho2    paired gain vs per-arm
+per-arm                      88         12.7%    0.555                        --
+shared (min-gated)           88          0.0%    0.796   +0.234 [+0.161, +0.318]
+union (mean)                 63          0.9%    0.823   +0.232 [+0.138, +0.341]
+
+  retention: min-gated 144 latents, union 124
+
+  PRE-REGISTERED PREDICTIONS (PREREG.md E28)
+    P1 retention falls under union: True
+    P2 union interaction below 5%: True  (0.9%)
+    P3 union collapse weaker than min-gated: True  (0.9% vs 0.0%)
+
+    VERDICT: collapse survives. Position control, not candidate
+    selection, is what removes the interaction.
+
+============================================================================================
+qwen35-4b  (n_seq 384)
+============================================================================================
+rule                    latents  latent x arm    Erho2    paired gain vs per-arm
+per-arm                     120          8.6%    0.610                        --
+shared (min-gated)          120          0.0%    0.767   +0.156 [+0.075, +0.235]
+union (mean)                 90          0.0%    0.831   +0.161 [+0.100, +0.224]
+
+  retention: min-gated 154 latents, union 141
+
+  PRE-REGISTERED PREDICTIONS (PREREG.md E28)
+    P1 retention falls under union: True
+    P2 union interaction below 5%: True  (0.0%)
+    P3 union collapse weaker than min-gated: False  (0.0% vs 0.0%)
+
+    VERDICT: collapse survives. Position control, not candidate
+    selection, is what removes the interaction.
+
+qwen35-9b: MISSING ['per_arm', 'shared', 'union']

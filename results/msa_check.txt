@@ -1,0 +1,40 @@
+============================================================================================
+E24 (a)  DID LATENTS SEPARATE, OR DID THE OUTCOME DISTRIBUTION STRETCH?
+============================================================================================
+model      design       mean y    sd y   msa raw   msa std
+gemma2-2b  per-arm      -3.684   0.628    4.1074   10.4014
+gemma2-2b  shared       -3.713   0.613    5.7344   15.2399
+gemma3-1b  per-arm      -4.245   0.619    6.3119   16.4920
+gemma3-1b  shared       -4.294   0.608    6.2263   16.8334
+
+model         d mean  sd ratio   d msa raw   d msa std  std survives?
+gemma2-2b     -0.029     0.976     +1.6270     +4.8386            YES
+gemma3-1b     -0.049     0.983     -0.0856     +0.3414            YES
+
+  msa on standardised y is a variance ratio: a rise there means latents
+  separated RELATIVE to the spread, which a location-scale shift cannot
+  produce. A rise in raw msa with none in standardised msa is a stretch.
+
+============================================================================================
+E24 (b)  BOOTSTRAP INTERVAL ON delta msa
+============================================================================================
+model           d msa                95% CI  rel. change            CI on rel.  frac<=0
+gemma2-2b      +1.627      [+0.258, +3.350]         40%           [+8%, +71%]    0.003
+gemma3-1b      -0.086      [-2.222, +1.709]         -1%          [-26%, +39%]    0.513
+
+============================================================================================
+E24 (c)  JACKKNIFE: is the rise broad, or a few latents?
+============================================================================================
+  Latents ranked by change in their own cell mean between designs.
+
+model      dropped     lat     d msa  % of full
+gemma2-2b  none         70    +1.627       100%
+gemma2-2b  top 5        65    +0.687        42%
+gemma2-2b  top 10       60    +0.339        21%
+gemma3-1b  none         32    -0.086       100%
+gemma3-1b  top 5        27    +0.694      -811%
+gemma3-1b  top 10       22    +0.747      -872%
+
+  If dropping five latents removes most of delta msa, this is an outlier
+  story and should be reported as one (cf. E2, where one latent of 240
+  moved the variance ratio from 42x to 7x).

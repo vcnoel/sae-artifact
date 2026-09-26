@@ -1,0 +1,48 @@
+suite 9b: google/gemma-2-9b layer 20, residual (384, 511, 3584)
+
+====================================================================================
+same width, L0 68 vs 20   (width_16k/average_l0_68  vs  width_16k/average_l0_20)
+====================================================================================
+  widths 16384 and 16384
+  mutual nearest neighbours: 13504 of 16384
+   cosine >=   matched pairs  % of left dict
+        0.50           13369           81.6%
+        0.60           12851           78.4%
+        0.70           11677           71.3%
+        0.80            9466           57.8%
+        0.90            4949           30.2%
+
+    matching  matched  median cos  firing both   Jaccard  top-1 agree
+   0.50-0.60      512       0.560          445     0.072         6.1%
+   0.60-0.70      512       0.656          439     0.134        12.5%
+   0.70-0.80      512       0.759          416     0.205        22.8%
+   0.80-0.90      512       0.864          414     0.342        36.5%
+   0.90-1.00      512       0.933          425     0.517        58.1%
+     >= 0.50      512       0.883          409     0.364        36.2%
+     >= 0.70      512       0.892          417     0.393        43.4%
+
+====================================================================================
+16k vs 65k, L0 58 vs 55   (width_16k/average_l0_58  vs  width_65k/average_l0_55)
+====================================================================================
+  widths 16384 and 65536
+  mutual nearest neighbours: 16148 of 16384
+   cosine >=   matched pairs  % of left dict
+        0.50           16033           97.9%
+        0.60           15212           92.8%
+        0.70           12520           76.4%
+        0.80            8385           51.2%
+        0.90            3774           23.0%
+
+    matching  matched  median cos  firing both   Jaccard  top-1 agree
+   0.50-0.60      512       0.569          418     0.072         6.7%
+   0.60-0.70      512       0.656          393     0.113        13.0%
+   0.70-0.80      512       0.751          387     0.189        18.9%
+   0.80-0.90      512       0.850          429     0.281        33.1%
+   0.90-1.00      512       0.938          465     0.458        49.5%
+     >= 0.50      512       0.811          436     0.284        28.0%
+     >= 0.70      512       0.851          429     0.314        31.7%
+
+====================================================================================
+Matched pairs are the latents the two dictionaries agree MOST about --
+near-identical decoder directions -- so these figures are an UPPER bound
+on agreement across the full dictionaries, not a typical value.

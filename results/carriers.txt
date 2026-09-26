@@ -1,0 +1,35 @@
+==========================================================================================
+E25  WHAT ARE THE LATENTS CARRYING THE msa RISE?
+==========================================================================================
+
+--- gemma2-2b  (70 latents, full d msa = +1.627) ---
+group        n    act_pct    act_max        kpn        jac       dchg     maxcos
+TOP 5        5      0.257     31.308      0.000      0.129     -0.517      0.115
+TOP 10      10      0.471     32.472      0.000      0.146     -0.275      0.115
+REST        60      0.507     32.261      0.000      0.290     -0.003      0.092
+
+    Mann-Whitney top5 vs rest, act_pct   p=0.557
+    Mann-Whitney top5 vs rest, act_max   p=0.59
+    Mann-Whitney top5 vs rest, kpn       p=0.821
+    Mann-Whitney top5 vs rest, jac       p=0.337
+    Mann-Whitney top5 vs rest, dchg      p=0.0242  <-- differs
+    Mann-Whitney top5 vs rest, maxcos    p=0.382
+    carrier fids: [790, 5471, 11495, 13118, 14584]
+
+--- gemma3-1b  (32 latents, full d msa = -0.086) ---
+group        n    act_pct    act_max        kpn        jac       dchg     maxcos
+TOP 5        5      0.375    284.598      0.000      0.263     -0.263      0.110
+TOP 10      10      0.391    289.408      0.000      0.196     -0.172      0.140
+REST        22      0.547    321.316      0.000      0.429     -0.027      0.136
+
+    Mann-Whitney top5 vs rest, act_pct   p=0.284
+    Mann-Whitney top5 vs rest, act_max   p=0.564
+    Mann-Whitney top5 vs rest, kpn       p=0.129
+    Mann-Whitney top5 vs rest, jac       p=0.53
+    Mann-Whitney top5 vs rest, dchg      p=0.524
+    Mann-Whitney top5 vs rest, maxcos    p=0.435
+    carrier fids: [474, 1500, 3600, 3711, 9770]
+
+  If no descriptor separates the carriers, the msa rise is concentrated
+  in latents with no common property -- report that, and stop looking
+  for a mechanism.

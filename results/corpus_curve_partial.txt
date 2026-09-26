@@ -1,0 +1,23 @@
+====================================================================================================
+gemma2-2b
+====================================================================================================
+ n_seq  Jaccard  top-agree  unc lat  unc ab%  unc Erho  pair lat  per-arm ab%  shared ab%    gain              95% CI
+    96    0.171      15.7%      180    13.8%     0.373        70         9.1%        0.0%  +0.239    [+0.146, +0.338]
+   384    0.141      13.9%      224    18.4%     0.492        93         7.6%        0.0%  +0.130    [+0.074, +0.208]
+  1536   MISSING (results/eval_arms_g2_s1536.csv / results/eval_arms_g2_s1536_shared.csv)
+
+====================================================================================================
+gemma3-1b
+====================================================================================================
+ n_seq  Jaccard  top-agree  unc lat  unc ab%  unc Erho  pair lat  per-arm ab%  shared ab%    gain              95% CI
+    96    0.142      13.6%      144    21.2%     0.320        32         3.5%        0.0%  +0.046    [-0.036, +0.159]
+   384    0.121      11.3%      183    24.8%     0.350        53        11.9%        2.4%  +0.138    [+0.024, +0.290]
+  1536   MISSING (results/eval_arms_g3_s1536.csv / results/eval_arms_g3_s1536_shared.csv)
+
+====================================================================================================
+PRE-REGISTERED CHECKS (PREREG.md E25)
+====================================================================================================
+gemma2-2b: fewer than three points; checks not evaluable
+gemma3-1b: fewer than three points; checks not evaluable
+Decision rule is in PREREG.md E25 and is applied in the write-up, not
+here: this script reports the quantities the entry named and nothing more.

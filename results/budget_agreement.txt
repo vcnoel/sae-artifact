@@ -1,0 +1,24 @@
+==============================================================================
+E27b  POSITION AGREEMENT ACROSS THE TRAINING-BUDGET CURVE
+==============================================================================
+  Two arms (trained vs soft-frozen), two positions per cell.
+  Levels are not comparable to the six-arm, six-position figures in the
+  paper; only the trend across budgets is.
+
+  tokens  latents   pairs   Jaccard  top-1 agree
+      3M      238       2     0.238        50.0%
+      6M      238       2     0.071        50.0%
+      9M      237       3     0.095         0.0%
+     12M      237       3     0.048        33.3%
+
+==============================================================================
+REFUSING TO REPORT A TREND. The smallest budget has 2 latents measured
+in BOTH arms, against a floor of 30. results/curve_*.csv drew each arm's
+latent sample independently, so the two arms overlap on 3 of 120
+latents at 12M and agreement is not estimable from these files.
+
+To answer the dose-response question this script was written for,
+retrain with --ckpt_every (src/chain4.sh) and re-evaluate the
+milestones on ONE shared latent list, as src/eval_arms.py does.
+That is training, not a re-analysis, and it is the reason this
+check is not in the paper.

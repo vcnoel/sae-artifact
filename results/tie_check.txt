@@ -1,0 +1,37 @@
+================================================================================================
+gemma2-2b: fixed latent set, n=62
+================================================================================================
+ n_seq    design       v_a      v_ab       v_e  n/cell    Erho2
+    96   per-arm   0.20955   0.01657   0.28051       6   0.7679
+    96    shared   0.24246   0.00000   0.25190       6   0.8524
+
+   384   per-arm   0.31007   0.04321   0.27766       6   0.7760
+   384    shared   0.33832   0.00000   0.25627       6   0.8879
+
+  1536   per-arm   0.30347   0.05388   0.24227       6   0.7630
+  1536    shared   0.27568   0.00000   0.23882       6   0.8738
+
+================================================================================================
+THE TIE
+================================================================================================
+  n_seq   384: shared 0.8879 - per-arm 0.7760 = +0.1119
+  n_seq  1536: shared 0.8738 - per-arm 0.7630 = +0.1108
+
+  difference of differences (1536 minus 384) = -0.00106
+
+  per-arm  v_a       0.31007 ->    0.30347   relative change   2.13%
+  per-arm  v_ab      0.04321 ->    0.05388   relative change  24.68%
+  per-arm  v_e       0.27766 ->    0.24227   relative change  12.75%
+  per-arm  erho2     0.77603 ->    0.76302   relative change   1.68%
+  shared   v_a       0.33832 ->    0.27568   relative change  18.51%
+  shared   v_ab      0.00000 ->    0.00000   relative change   0.00%
+  shared   v_e       0.25627 ->    0.23882   relative change   6.81%
+  shared   erho2     0.88791 ->    0.87383   relative change   1.58%
+
+  VERDICT: the components are NOT the same at the two corpora. Both
+  designs' coefficients move, and the tie is a coincidence in their
+  DIFFERENCE, not a ceiling in the effect. The correct statement is
+  that the fixed-set gain rises from the smallest corpus and is
+  unchanged thereafter within an interval far wider than the
+  movement -- which is not evidence of a ceiling, and no ceiling
+  should be claimed.

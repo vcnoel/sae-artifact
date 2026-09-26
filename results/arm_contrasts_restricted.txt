@@ -1,0 +1,36 @@
+====================================================================================
+E15  TRAINED-STYLE vs FROZEN-STYLE: EVERY DEFENSIBLE CONTRAST
+====================================================================================
+  n = 103 latents measured in all arms (crossed, so pairing is valid)
+  decoder-free arms : ['free', 'lr1e4', 'order1', 'k41']
+  soft-frozen arms  : ['tau080', 'tau090']
+
+  contrast                   HL            95% CI  paired HL         paired CI         p
+  free vs tau080          1.228      [1.00, 1.51]      1.306      [1.10, 1.56]    0.0043
+  free vs tau090          1.540      [1.27, 1.88]      1.587      [1.29, 1.83]   2.7e-07
+  lr1e4 vs tau080         1.171      [0.95, 1.44]      1.222      [0.98, 1.44]     0.032
+  lr1e4 vs tau090         1.451      [1.19, 1.78]      1.455      [1.20, 1.72]   1.4e-06
+  order1 vs tau080        1.295      [1.04, 1.64]      1.297      [1.12, 1.55]    0.0014
+  order1 vs tau090        1.637      [1.31, 2.03]      1.597      [1.40, 2.04]   3.2e-06
+  k41 vs tau080           1.446      [1.13, 1.88]      1.623      [1.25, 1.76]   2.2e-05
+  k41 vs tau090           1.796      [1.44, 2.27]      1.891      [1.42, 2.28]   6.5e-09
+
+  MATCHED (decoder freedom only: free vs tau*) (n=2):
+    unpaired HL  range [1.228, 1.540], median 1.384
+    paired   HL  range [1.306, 1.587], median 1.447
+    contrasts whose PAIRED 95% CI excludes 1: 2/2
+
+  all contrasts (n=8):
+    unpaired HL  range [1.171, 1.796], median 1.449
+    paired   HL  range [1.222, 1.891], median 1.521
+    contrasts whose PAIRED 95% CI excludes 1: 7/8
+
+  excluding k41 (n=6):
+    unpaired HL  range [1.171, 1.637], median 1.373
+    paired   HL  range [1.222, 1.597], median 1.380
+    contrasts whose PAIRED 95% CI excludes 1: 5/6
+
+  READING. The endpoint is a range over defensible fitting choices, not a
+  point. Report the range. A single contrast landing at 1.19x was never
+  wrong, but it was one draw from this spread and its interval's distance
+  from 1 was a property of which pair happened to be run.

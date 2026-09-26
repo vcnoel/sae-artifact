@@ -1,0 +1,53 @@
+====================================================================================
+E17 (1)  IS latent x arm A CLIPPED NEGATIVE?
+====================================================================================
+design                                    v_ab clipped    v_ab RAW     MS_ab       MSE
+per-arm, all latents                           0.06369     0.06369    0.7002    0.3181
+per-arm, restricted to shared latents          0.04492     0.04492    0.5319    0.2624
+SHARED positions                               0.00000    -0.00657    0.1806    0.2201
+
+  CONFIRMED: the shared design's raw latent x arm component is NEGATIVE (-0.00657),
+  i.e. MS_ab < MSE -- latents vary no more across arms than positions
+  vary within a cell. Clipped to 0 for reporting.
+
+  Direction of the resulting bias in E rho^2, which is easy to get
+  backwards: v_ab is in the DENOMINATOR, so clipping a negative up to
+  zero ENLARGES the denominator and SHRINKS E rho^2.
+    E rho^2 clipped (reported) = 0.808
+    E rho^2 unclipped          = 0.837
+  So the clipped figure is the conservative one. The honest statement
+  is still not a point estimate: a component pinned at a boundary is
+  'not distinguishable from zero', and the interval below is what
+  should be quoted.
+
+====================================================================================
+E17 (2)  BOOTSTRAP OVER LATENTS
+====================================================================================
+  Resampling LATENTS with replacement (the unit of generalisation),
+  1000 draws, components recomputed per draw.
+
+design                                   bal.lat   Erho2            95% CI  P(>0.8)  v_ab<0
+per-arm, all latents                         180   0.373    [0.283, 0.451]     0.00    0.00
+per-arm, restricted to shared latents        100   0.499    [0.387, 0.592]     0.00    0.00
+SHARED positions                              70   0.808    [0.691, 0.867]     0.52    0.96
+
+  'v_ab<0' is the fraction of draws whose RAW latent x arm component is
+  negative. Near 0.5 means the component is sitting on the boundary and
+  should be reported as indistinguishable from zero, not as a value.
+
+====================================================================================
+E17 (3)  WHAT DOES THE SHARED DESIGN KEEP?
+====================================================================================
+  retained 103 of 240 latents (43%)
+  survivors are latents live in ALL six arms that additionally share at
+  least one firing position across all six.
+
+                median act   max act  median kpn   n obs
+DROPPED             11.855    27.816    0.000161      36
+RETAINED            16.815    31.393    0.000212      36
+  Mann-Whitney act_med   p=8e-09
+  Mann-Whitney act_max   p=0.017
+  Mann-Whitney kpn       p=2.6e-05
+
+  The retained set is a SUBPOPULATION, not a sample: any claim built on
+  the shared design is a claim about positionally consistent latents.

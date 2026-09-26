@@ -1,0 +1,29 @@
+====================================================================================
+REPRODUCIBILITY OF THE SIX-ARM RUN UNDER SEED 0
+====================================================================================
+CONFOUND: the original ran under transformers 5.5.0; this rerun did not.
+A mismatch below is evidence about the pipeline+environment jointly,
+not about seed determinism alone.
+
+  rows: original 8492, rerun 8370
+  arms: original ['free', 'k41', 'lr1e4', 'order1', 'tau080', 'tau090']
+        rerun    ['free', 'k41', 'lr1e4', 'order1', 'tau080', 'tau090']
+  latents: 240 vs 240, intersection 8 (3.3%)
+  (latent, arm) cells in both: 47
+  cells with an IDENTICAL position set: 31.9%
+  matched (arm, latent, position) observations: 205
+  max |delta kl_per_norm|      = 7.334e-03
+  median relative difference   = 1.975e-01
+  Spearman(original, rerun)    = +0.8935
+
+  variance components, original vs rerun:
+    component             original     rerun     delta
+    latent                   16.9%     15.1%     -1.8
+    arm                       3.2%      2.2%     -1.1
+    latent x arm             12.5%     13.8%     +1.3
+    residual                 67.4%     69.0%     +1.6
+    E rho^2                  0.415     0.373    -0.042
+
+  VERDICT: NOT bit-identical; position sets 31.9% identical; E rho^2 moves -0.042
+  The paper's claim is about the COMPONENTS, so the last line is the
+  one that matters -- bitwise equality is a bonus, not the standard.

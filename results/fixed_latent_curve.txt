@@ -1,0 +1,56 @@
+============================================================================================
+gemma2-2b
+============================================================================================
+  latents balanced in the paired cube at each corpus: 96:62, 384:93, 1536:123
+  balanced at ALL THREE simultaneously: 62
+
+  (1) FIXED LATENT SET -- the sample cannot change across rows
+  n_seq   lat  per-arm ab%  shared ab%  per-arm Erho  shared Erho    gain              95% CI
+     96    62         3.2%        0.0%         0.768        0.852  +0.082    [+0.034, +0.149]
+    384    62         6.7%        0.0%         0.776        0.888  +0.110    [+0.054, +0.196]
+   1536    62         8.7%        0.0%         0.763        0.874  +0.110    [+0.057, +0.202]
+
+  gain across corpora on the FIXED set: +0.082 -> +0.110 -> +0.110   (net +0.028)
+  Compare against the varying-sample curve in results/corpus_curve.txt.
+  If the fixed-set gain is flat or falling while the varying-sample
+  gain rises, the rise is sample composition, not data.
+
+  (2) WHAT THE BALANCED-CUBE FILTER NEWLY ADMITS AT 1536
+  balanced at 96: 62;  new at 1536: 61
+
+group                       lat   median act  positional consist.  per-arm ab%
+balanced already at 96       62       25.219                0.114         8.7%
+new at 1536                  61       21.489                0.105        18.8%
+
+  Positional consistency is mean pairwise Jaccard of a latent's
+  measured position sets across the 15 arm pairs, scored on the
+  per-arm evaluation so it is independent of the shared design.
+
+============================================================================================
+gemma3-1b
+============================================================================================
+  latents balanced in the paired cube at each corpus: 96:32, 384:53, 1536:70
+  balanced at ALL THREE simultaneously: 32
+
+  (1) FIXED LATENT SET -- the sample cannot change across rows
+  n_seq   lat  per-arm ab%  shared ab%  per-arm Erho  shared Erho    gain              95% CI
+     96    32         3.5%        0.0%         0.781        0.831  +0.046    [-0.036, +0.159]
+    384    32         5.5%        0.0%         0.770        0.854  +0.082    [-0.004, +0.253]
+   1536    32        10.6%        0.9%         0.710        0.885  +0.176    [+0.081, +0.324]
+
+  gain across corpora on the FIXED set: +0.046 -> +0.082 -> +0.176   (net +0.129)
+  Compare against the varying-sample curve in results/corpus_curve.txt.
+  If the fixed-set gain is flat or falling while the varying-sample
+  gain rises, the rise is sample composition, not data.
+
+  (2) WHAT THE BALANCED-CUBE FILTER NEWLY ADMITS AT 1536
+  balanced at 96: 32;  new at 1536: 38
+
+group                       lat   median act  positional consist.  per-arm ab%
+balanced already at 96       32      281.529                0.155        10.6%
+new at 1536                  38      202.242                0.084        32.3%
+
+  Positional consistency is mean pairwise Jaccard of a latent's
+  measured position sets across the 15 arm pairs, scored on the
+  per-arm evaluation so it is independent of the shared design.
+

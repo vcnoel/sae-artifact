@@ -1,0 +1,27 @@
+suite 2b: google/gemma-2-2b layer 20, residual (384, 511, 2304)
+
+====================================================================================
+same width, L0 139 vs 38   (width_16k/average_l0_139  vs  width_16k/average_l0_38)
+====================================================================================
+  widths 16384 and 16384
+  mutual nearest neighbours: 14118 of 16384
+   cosine >=   matched pairs  % of left dict
+        0.50           13917           84.9%
+        0.60           13497           82.4%
+        0.70           12406           75.7%
+        0.80           10461           63.8%
+        0.90            5959           36.4%
+
+    matching  matched  median cos  firing both   Jaccard  top-1 agree
+   0.50-0.60      420       0.560          344     0.101        10.8%
+   0.60-0.70      512       0.660          407     0.184        17.7%
+   0.70-0.80      512       0.760          406     0.242        26.6%
+   0.80-0.90      512       0.860          431     0.453        52.2%
+   0.90-1.00      512       0.937          479     0.640        67.6%
+     >= 0.50      512       0.885          452     0.494        59.1%
+     >= 0.70      512       0.896          462     0.520        56.5%
+
+====================================================================================
+Matched pairs are the latents the two dictionaries agree MOST about --
+near-identical decoder directions -- so these figures are an UPPER bound
+on agreement across the full dictionaries, not a typical value.

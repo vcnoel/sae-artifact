@@ -1,0 +1,41 @@
+====================================================================================
+(a) IS POSITION CROSSED WITH LATENT, OR NESTED WITHIN ARM?
+====================================================================================
+            pair  n_latents  mean_jaccard  mean_shared  pct_identical
+     free vs k41        240         0.197        1.596          1.667
+   free vs lr1e4        240         0.236        1.879          4.167
+  free vs order1        240         0.102        0.858          0.833
+  free vs tau080        240         0.271        2.146          3.333
+  free vs tau090        240         0.155        1.283          1.667
+    k41 vs lr1e4        240         0.171        1.425          0.417
+   k41 vs order1        240         0.108        0.904          0.417
+   k41 vs tau080        240         0.177        1.458          0.417
+   k41 vs tau090        240         0.126        1.062          0.417
+ lr1e4 vs order1        240         0.150        1.238          1.667
+ lr1e4 vs tau080        240         0.235        1.887          2.500
+ lr1e4 vs tau090        240         0.169        1.413          1.250
+order1 vs tau080        240         0.122        1.033          0.417
+order1 vs tau090        240         0.088        0.750          0.417
+tau080 vs tau090        240         0.340        2.575          5.833
+
+  mean Jaccard overlap of measured position sets = 0.176
+  latents whose position set is IDENTICAL across an arm pair = 1.7%
+  DESIGN: NESTED -- position is selected within (latent, arm); the latent x arm term therefore mixes 'the latent behaves differently' with 'the arms disagree about where it fires'
+  arm pairs agreeing on the SINGLE top-activating position: 17.3% of latents (min 7.1, max 31.7)
+
+====================================================================================
+(b) IS THE RESIDUAL SYSTEMATIC IN POSITION, OR UNEXPLAINED?
+====================================================================================
+  R^2 of residual on rel_pos                          = 0.0010
+  R^2 of residual on log_act                          = 0.0006
+  R^2 of residual on act_rank                         = 0.0042
+  R^2 of residual on rel_pos + log_act + act_rank     = 0.0053
+  Spearman(rel_pos, residual)  = -0.028 (p=0.01)
+  Spearman(act_rank, residual) = -0.063 (p=4.8e-09)
+
+  INTERPRETATION: the residual is position-within-cell BY CONSTRUCTION
+  (it is the deviation from the latent x arm cell mean, and position is
+  the only thing varying inside a cell). What the R^2 above shows is how
+  much of it is SYSTEMATIC in observable position covariates. A low R^2
+  means position matters enormously but not monotonically in depth or
+  activation -- which position, not how late or how strong.

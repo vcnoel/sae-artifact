@@ -1,0 +1,36 @@
+================================================================================================
+E22 (a)  MEAN-SQUARE DECOMPOSITION: is the v_a rise real or msab coupling?
+================================================================================================
+model      design            msa     msab      mse      v_a     v_ab
+gemma2-2b  per-arm        4.1074   0.4704   0.2529   0.1010   0.0363
+gemma2-2b  shared         5.7344   0.1806   0.2201   0.1543   0.0000
+gemma3-1b  per-arm        6.3119   0.2822   0.2016   0.1675   0.0134
+gemma3-1b  shared         6.2263   0.1654   0.2057   0.1684   0.0000
+
+model           d msa    d msab     d mse     d v_a    signal  coupling  signal %
+gemma2-2b     +1.6270   -0.2898   -0.0328   +0.0532   +0.0452   +0.0080       85%
+gemma3-1b     -0.0856   -0.1168   +0.0041   +0.0009   -0.0024   +0.0032     -274%
+
+  'signal' is delta msa / (J n): the part of the v_a rise that is NOT
+  the mechanical consequence of msab falling. 'coupling' is the rest.
+
+  gemma2-2b: msa rose by +1.6270; genuine signal exceeds coupling. The v_a rise is REAL.
+  gemma3-1b: msa did NOT rise (delta = -0.0856). The entire v_a increase is msab coupling -- ARTIFACT.
+
+  EXCESS AFTER THE COUPLING CORRECTION
+model        excess (E21)   coupling in Erho2   corrected excess
+gemma2-2b         +0.1023             +0.0427            +0.0596
+gemma3-1b         -0.0021             -0.0002            -0.0020
+
+  If the corrected excess is near zero the v_a finding does not survive.
+
+================================================================================================
+E22 (b)  IS THE EXCESS SIZE-DEPENDENT?
+================================================================================================
+  n = 16 points (10 nested + 6 disjoint), both models
+  excess = +0.00033 * latents +0.0564
+  Pearson r = +0.075 (p=0.782)
+    within gemma2-2b  slope = -0.00021
+    within gemma3-1b  slope = -0.00312
+
+  excess > 0 in 13/16; median +0.0468, range [-0.0251, +0.2156]

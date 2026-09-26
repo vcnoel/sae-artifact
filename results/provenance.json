@@ -1,0 +1,27 @@
+{
+  "corpus_bytes": 6357543,
+  "corpus_exists": true,
+  "corpus_path": "$HF_HOME/hub/datasets--wikitext/snapshots/b08601e04326c79dfdd32d625aee71d232d685c3/wikitext-2-raw-v1/train-00000-of-00001.parquet",
+  "corpus_sha256": "e83889baabc497075506f91975be5fac0d45c5290b6b20582c8cd1e853d0c9f7",
+  "cuda": "12.8",
+  "git_commit": "unavailable",
+  "gpu": "NVIDIA A100 80GB PCIe",
+  "hf_revisions": {
+    "google/gemma-2-2b": "c5ebcd40d208330abc697524c919956e692655cf",
+    "google/gemma-2-9b": "33c193028431c2fde6c6e51f29e6f17b60cbfac6",
+    "google/gemma-scope-2b-pt-res": "fd571b47c1c64851e9b1989792367b9babb4af63",
+    "google/gemma-scope-9b-pt-res": "f9b689815814972562d28082f9f7d65d7e01fdc8"
+  },
+  "host": "eda8ac80b5cb",
+  "huggingface_hub": "1.27.0",
+  "n_pos_per_latent": 6,
+  "n_seq": 384,
+  "numpy": "2.1.2",
+  "pandas": "3.0.5",
+  "platform": "Linux-6.8.0-124-generic-x86_64-with-glibc2.39",
+  "positions_per_sequence": 511,
+  "python": "3.12.3",
+  "sequence_selection": "WikiText-103 train parquet; paragraphs with >400 stripped chars and not starting with '='; concatenated in file order into a rolling buffer; each time the buffer tokenises to >=512 tokens the first 512 are taken as one sequence and the buffer is reset; position 0 (BOS) is dropped, leaving 511 measured positions per sequence. Deterministic given the file, so n_seq=384 denotes the first 384 such sequences.",
+  "torch": "2.8.0+cu128",
+  "transformers": "5.15.0"
+}

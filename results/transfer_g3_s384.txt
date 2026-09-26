@@ -1,0 +1,26 @@
+====================================================================================
+E16  TRANSFER UNDER PER-ARM vs SHARED POSITION SELECTION
+====================================================================================
+design                            lat  pairs  rho med         rho range  inter%   Erho2
+per-arm positions                 240     15   +0.333  [+0.202, +0.561]    24.8   0.350
+per-arm, RESTRICTED to shared latents   85     15   +0.504  [+0.408, +0.632]    18.5   0.496
+SHARED positions                   85     15   +0.750  [+0.649, +0.845]     2.4   0.767
+
+  rho:          +0.333 -> +0.750  (+0.417 total)
+  latent x arm: 24.8% -> 2.4%
+  E rho^2:      0.350 -> 0.767
+
+  DECOMPOSING THAT GAIN (the shared design keeps only latents
+  firing in every arm at a common position, so part of the gain
+  is selection onto positionally stable latents, not the design):
+    selection onto those latents : +0.171  (41% of gain)
+    position crossing itself     : +0.246  (59% of gain)
+    like-for-like interaction    : 18.5% -> 2.4% on the SAME latents
+    like-for-like E rho^2        : 0.496 -> 0.767
+
+  The like-for-like lines are the defensible ones. Quote those.
+
+  >>> BRANCH A (see paper/S5_BRANCHES.md): the instability is
+  largely position selection. The abstract's 'attributions do
+  not transfer' claim is TOO STRONG as written and needs
+  rewriting, not rewording.

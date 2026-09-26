@@ -1,0 +1,3 @@
+suite,dictionary,width,d_model,n_sampled,frac_live,fire_median,fire_q25,fire_q75,chance_agree_pct,positions_total
+2b,average_l0_139,16384,2304,2048,0.99609375,576.0,157.75,1676.75,0.17361320424870091,196224
+2b,average_l0_38,16384,2304,2048,0.8681640625,173.0,36.25,558.5,0.5780539962576852,196224

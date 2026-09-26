@@ -1,0 +1,32 @@
+hook vs hidden_states[12]: max abs diff 0.00e+00 (ok)
+suite 2b: Qwen/Qwen3.5-2B-Base layer 11, residual (384, 511, 2048)
+
+====================================================================================
+same width, k 100 vs 50   (Qwen/SAE-Res-Qwen3.5-2B-Base-W32K-L0_100  vs  Qwen/SAE-Res-Qwen3.5-2B-Base-W32K-L0_50)
+====================================================================================
+  widths 32768 and 32768
+  left  k 100  FVU released 0.251  (x - b_dec) 0.595  ok
+  right k  50  FVU released 0.306  (x - b_dec) 0.634  ok
+  mutual nearest neighbours: 24977 of 32768, median cosine 0.829
+   cosine >=   matched pairs  % of left dict
+        0.50           23659           72.2%
+        0.60           21718           66.3%
+        0.70           18449           56.3%
+        0.80           14031           42.8%
+        0.90            7892           24.1%
+
+    matching  matched  median cos  firing both   Jaccard  top-1 agree  % mutual
+   0.50-0.60      512       0.553          388     0.058         6.2%      7.8%
+   0.60-0.70      512       0.655          398     0.110        15.6%     13.1%
+   0.70-0.80      512       0.754          412     0.164        17.0%     17.7%
+   0.80-0.90      512       0.857          417     0.295        36.7%     24.6%
+   0.90-1.00      512       0.944          463     0.517        57.0%     31.6%
+     >= 0.50      512       0.834          428     0.287        31.8%     94.7%
+     >= 0.70      512       0.883          437     0.353        40.3%     73.9%
+
+====================================================================================
+Matched pairs are the latents the two dictionaries agree MOST about --
+near-identical decoder directions -- so these figures are an UPPER bound
+on agreement across the full dictionaries, not a typical value.
+One pair only: Qwen-Scope ships one width per size, so this is a
+sparsity contrast and has no width counterpart.

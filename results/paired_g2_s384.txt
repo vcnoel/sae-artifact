@@ -1,0 +1,32 @@
+====================================================================================
+E18 (a)  PAIRED INTERVAL ON THE E rho^2 GAIN (common latent resample)
+====================================================================================
+  93 latents balanced in BOTH designs; cubes (93, 6, 6) (per-arm) and (93, 6, 6) (shared)
+  E rho^2 per-arm restricted = 0.738
+  E rho^2 shared positions   = 0.869
+  observed difference        = +0.131
+
+  paired difference: +0.127  95% CI [+0.073, +0.202]  (2000 draws)
+  fraction of draws <= 0: 0.0000
+
+  This replaces the non-overlap-of-marginals argument everywhere.
+
+====================================================================================
+E18 (b)  IS THE RETAINED SET'S ADVANTAGE PRECISION, OR VARIANCE?
+====================================================================================
+  Both rows use the SAME per-arm design; only the latent set differs.
+  v_a is between-latent TRUE variance (the numerator); v_ab and v_e are
+  error terms. A gain that is all v_a is variance inflation, not a
+  better measurement.
+
+latent set          n       v_a      v_ab       v_e    Erho2
+RETAINED          130    0.2268    0.0648    0.3232    0.656
+DROPPED            94    0.0844    0.1888    0.3348    0.256
+
+    between-latent (numerator)       retained/dropped = 2.69x
+    latent x arm (error)             retained/dropped = 0.34x
+    position within cell (error)     retained/dropped = 0.97x
+    total error (v_ab + v_e)         retained/dropped = 0.74x
+
+  VERDICT: BOTH -- larger true variance AND smaller error. The
+  subpopulation claim stands and is strong.

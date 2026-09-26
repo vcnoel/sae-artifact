@@ -1,0 +1,54 @@
+====================================================================================
+E14  RATE vs MAGNITUDE READOUTS UNDER THE ALIGNMENT SENSITIVITY
+====================================================================================
+dictionary          n  rho(al,KL/nrm)  rho(al,KLraw)  rho(al,|dtop|)  rho(al,dtop)  rho(al,flip)  fliprate
+L12_131k_l067     300          +0.309         +0.349          +0.307        +0.046        +0.120     0.028
+L12_16k_l022      300          +0.414         +0.378          +0.302        +0.038        +0.158     0.082
+L12_16k_l0445     300          +0.313         +0.237          +0.186        -0.042        +0.122     0.017
+L12_16k_l082      300          +0.339         +0.276          +0.199        -0.004        +0.318     0.035
+L12_65k_l072      300          +0.266         +0.234          +0.167        +0.073        +0.045     0.027
+L19_16k_l023      300          -0.150         -0.131          -0.102        -0.094        -0.104     0.110
+L19_16k_l0279     300          -0.010         +0.011          -0.022        +0.052        +0.001     0.052
+L19_16k_l073      300          +0.031         +0.002          -0.035        -0.049        +0.020     0.077
+L19_65k_l063      300          -0.052         -0.029          +0.042        -0.006        +0.027     0.049
+
+  pooled within-dict rho(align, KL per unit norm (MAG)                          ) = +0.162  (p=2.3e-17, n=2700)
+  pooled within-dict rho(align, KL raw (MAG)                                    ) = +0.147  (p=1.5e-14, n=2700)
+  pooled within-dict rho(align, |prob change of top tok| (MAG, bounded)         ) = +0.116  (p=1.5e-09, n=2700)
+  pooled within-dict rho(align, signed prob change of top tok (NOT a magnitude) ) = +0.001  (p=0.94, n=2700)
+  pooled within-dict rho(align, argmax flipped (RATE)                           ) = +0.032  (p=0.097, n=2700)
+
+  restricted to layer 12, where the alignment sensitivity actually exists:
+    rho(align, KL per unit norm (MAG)                          ) = +0.328  (p=5.4e-39, n=1500)
+    rho(align, KL raw (MAG)                                    ) = +0.295  (p=1.9e-31, n=1500)
+    rho(align, |prob change of top tok| (MAG, bounded)         ) = +0.232  (p=7.9e-20, n=1500)
+    rho(align, signed prob change of top tok (NOT a magnitude) ) = +0.022  (p=0.39, n=1500)
+    rho(align, argmax flipped (RATE)                           ) = +0.100  (p=0.0001, n=1500)
+    |rho_KL| / |rho_flip| (layer 12 only) = 3.27
+
+  |rho_KL| / |rho_flip| = 5.08
+  VERDICT: the rate readout is substantially less sensitive to
+  alignment than the magnitude readout. The protocol can recommend a
+  readout, not just flag a confound.
+
+  Caveat 1: flip rate is bounded and its variance collapses when the
+  mean rate is near 0 or 1. Measured flip rates run 0.017-0.110, i.e.
+  the rate readout is a RARE event here, so it has genuinely less power
+  than KL and part of the smaller rho is that, not saturation. This is
+  the main threat to the recommendation and is not resolved by the data
+  in hand -- a design with flip rates near 0.5 would settle it.
+
+  Caveat 2: the pre-registered ORDERING was KL > bounded-magnitude >
+  flip. Read against |dtop| -- the actual bounded magnitude -- see the
+  table above. The SIGNED dtop column is reported only to show why it
+  must not be used: 46% of its values are negative, so a rank
+  correlation against it measures direction rather than size and its
+  per-latent median is ~0. An earlier version of this analysis used the
+  signed column and read its near-zero correlation as evidence about
+  saturation; it was evidence about signs.
+
+  Caveat 3: this comparison is not fully like-for-like on normalisation.
+  kpn is per unit perturbation norm; flip and |dtop| are not normalised,
+  and a rate cannot be. Raw KL is shown alongside kpn so the size of that
+  gap is visible rather than hidden -- note rho(pnorm, KL_raw)=0.70,
+  i.e. raw KL partly tracks intervention size (Artifact 2).

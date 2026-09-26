@@ -1,0 +1,56 @@
+======================================================================================
+E20 (1)  NULL CONTROL: is the retention trend about CONSISTENCY?
+======================================================================================
+  Sweep the top-f fraction ranked by positional consistency, then by
+  20 random rankings over the identical fractions. Slope is
+  gain regressed on fraction kept (positive = gain grows with f).
+
+model        consistency slope  random slope mean      random 95% range  percentile
+gemma2-2b              +0.1998            +0.0444    [-0.1291, +0.2053]         95%
+gemma3-1b              -0.0038            -0.0137    [-0.2321, +0.1372]         55%
+
+  A consistency slope inside the random range means the E19 trend is a
+  subset-size artifact and consistency is NOT established as moderator.
+
+======================================================================================
+E20 (2)  THE MECHANISM VARIABLE: gain against per-arm v_ab
+======================================================================================
+model        frac  lat  per-arm v_ab     gain
+gemma2-2b    100%   70        0.0363   +0.245
+gemma2-2b     75%   52        0.0198   +0.194
+gemma2-2b     55%   38        0.0223   +0.144
+gemma2-2b     45%   32        0.0158   +0.123
+gemma2-2b     30%   21        0.0143   +0.113
+gemma3-1b    100%   32        0.0134   +0.050
+gemma3-1b     75%   24        0.0060   +0.022
+gemma3-1b     55%   18        0.0023   +0.044
+gemma3-1b     45%   14        0.0007   +0.041
+gemma3-1b     30%   12        0.0000   +0.047
+
+  pooled over BOTH models, n=10 subset points:
+    Pearson r  = +0.917 (p=0.00018)
+    Spearman   = +0.879 (p=0.00081)
+    fit: gain = +6.018 * v_ab +0.023
+    mean residual, gemma2-2b  = +0.0096
+    mean residual, gemma3-1b  = -0.0096
+
+  If both models scatter about one line, the gain is a function of how
+  much latent x arm there was to remove, and retention is only a proxy.
+
+======================================================================================
+E20 (3)  MECHANISM FOR THE v_a RISE: selection on a correlate of KL
+======================================================================================
+  Per-latent Spearman(activation, kl_per_norm) under the per-arm design.
+  If per-arm selection compresses between-latent variance by measuring
+  every latent near its own activation maximum, v_a should rise more
+  under position control where that correlation is stronger.
+
+model      group                   lat  rho(act,kpn)  v_a per-arm  v_a shared    rise
+gemma2-2b  STRONG rho(act,kpn)      35         0.392       0.1008      0.1285   1.28x
+gemma2-2b  WEAK rho(act,kpn)        35         0.056       0.1037      0.1824   1.76x
+gemma3-1b  STRONG rho(act,kpn)      16         0.348       0.2571      0.2447   0.95x
+gemma3-1b  WEAK rho(act,kpn)        16         0.149       0.0689      0.0916   1.33x
+
+  Prediction: the STRONG group shows the larger v_a rise. If the two
+  groups rise equally, this mechanism is not what is happening and the
+  v_a increase stays unexplained.

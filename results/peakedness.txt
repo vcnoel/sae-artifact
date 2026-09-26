@@ -1,0 +1,21 @@
+google/gemma-2-2b layer 12, residual (384, 511, 2304)
+
+dictionary              lat    peak ratio (max/2nd)    entropy (1=flat)
+                              median    q25     q75   median   q25   q75
+ours: free              224     1.23   1.17    1.30    0.967 0.947 0.979
+ours: k41               218     1.23   1.16    1.36    0.965 0.935 0.978
+ours: lr1e4             238     1.17   1.14    1.22    0.983 0.973 0.987
+ours: order1            221     1.24   1.18    1.37    0.962 0.933 0.975
+ours: tau080            236     1.19   1.15    1.26    0.975 0.951 0.982
+ours: tau090            238     1.17   1.14    1.23    0.978 0.956 0.985
+gemma-scope 16k L0 82   231     1.15   1.11    1.18    0.991 0.984 0.994
+
+  our arms, peak ratio median across arms = 1.21 (range 1.17-1.24)
+  released comparator                     = 1.15
+  our arms, entropy median across arms    = 0.971 (range 0.962-0.983)
+  released comparator                     = 0.991
+
+  Our arms are NOT flatter on both statistics. The undertraining
+  mechanism does not have the profile-shape support it needs, and
+  unstable argmax is a property of SAE latents on real text rather
+  than of a 12M-token budget.

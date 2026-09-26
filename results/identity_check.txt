@@ -1,0 +1,60 @@
+============================================================================================
+E21 (a)  IS THE v_ab RELATIONSHIP ANYTHING BEYOND THE DEFINITION?
+============================================================================================
+model        frac  lat     v_ab  observed  predicted   excess  v_a rise
+gemma2-2b    100%   70   0.0363    +0.245     +0.143   +0.102     1.53x
+gemma2-2b     75%   52   0.0198    +0.194     +0.095   +0.099     1.35x
+gemma2-2b     55%   38   0.0223    +0.144     +0.097   +0.047     1.14x
+gemma2-2b     45%   32   0.0158    +0.123     +0.075   +0.049     1.19x
+gemma2-2b     30%   21   0.0143    +0.113     +0.066   +0.047     1.15x
+gemma3-1b    100%   32   0.0134    +0.050     +0.052   -0.002     1.01x
+gemma3-1b     75%   24   0.0060    +0.022     +0.020   +0.002     0.95x
+gemma3-1b     55%   18   0.0023    +0.044     +0.010   +0.034     1.24x
+gemma3-1b     45%   14   0.0007    +0.041     +0.003   +0.038     1.26x
+gemma3-1b     30%   12   0.0000    +0.047     +0.000   +0.047     1.28x
+
+  correlation(predicted, observed) = +0.940
+  mean observed  = +0.1023
+  mean predicted = +0.0561  (55% of observed)
+  mean excess    = +0.0462  (45% of observed)
+  excess > 0 in 9/10 subsets
+  Wilcoxon on excess: p=0.00586
+
+  VERDICT: the identity explains only part of the gain; the excess
+  is the v_a rise and THAT is the finding.
+
+============================================================================================
+E21 (b)  DISJOINT PARTITIONS (the E20 sweep was nested; this is not)
+============================================================================================
+model        part  lat     v_ab  observed  predicted   excess
+gemma2-2b       1   18   0.0305    +0.122     +0.147   -0.025
+gemma2-2b       2   18   0.0182    +0.299     +0.083   +0.216
+gemma2-2b       3   17   0.0401    +0.202     +0.125   +0.077
+gemma2-2b       4   17   0.0541    +0.356     +0.166   +0.190
+gemma3-1b       1   16   0.0018    +0.147     +0.013   +0.133
+gemma3-1b       2   16   0.0264    +0.051     +0.064   -0.014
+
+  6 INDEPENDENT points: Pearson r = +0.447 (p=0.374)
+
+  bootstrap over latents, slope of observed gain on per-arm v_ab:
+    slope = +6.74  95% CI [+3.09, +13.81]
+    (p = 0.00018 from the nested sweep is withdrawn and not quoted.)
+
+============================================================================================
+E21 (c)  WHY DO WEAK-rho LATENTS GAIN MORE v_a? position-set overlap
+============================================================================================
+  Prediction: per-arm and shared position sets overlap MORE for
+  strong-rho latents, because where activation predicts effect the two
+  selection rules nearly coincide.
+
+model      group                 lat  Jaccard(per-arm, shared)         p
+gemma2-2b  STRONG rho             35                     0.377          
+gemma2-2b  WEAK rho               35                     0.300          
+           -> Mann-Whitney                                         0.229
+gemma3-1b  STRONG rho             16                     0.325          
+gemma3-1b  WEAK rho               16                     0.383          
+           -> Mann-Whitney                                         0.534
+
+  If strong-rho overlap is higher, per-arm selection is near-random
+  exactly where activation fails to predict effect, and that is why
+  those latents gain the most from a fixed position.
