@@ -1000,6 +1000,47 @@ mac("GainWidthRatio",
     float(M[sanitise("GThreeSThreeEightyFourGainWidth")])
     / float(M[sanitise("GTwoSThreeEightyFourGainWidth")]), "{:.1f}")
 
+# ------- final-read additions, v2 manuscript --------------------------------
+# Gemma-3-1B's per-arm residual regression at 96 sequences, from the same
+# position_structure.py output format as the other families above.
+_pp = "results/position_structure_g3.txt"
+if os.path.exists(_pp):
+    _m = re.search(r"rel_pos \+ log_act \+ act_rank\s*=\s*([\d.]+)",
+                   io.open(_pp, encoding="utf-8").read())
+    if _m:
+        mac("GThreePosResidRTwo", float(_m.group(1)), "{:.3f}")
+# Frequency bin against causal mass on the rare-decile eval (sae_rare.csv),
+# per latent medians as in the block that feeds PNorm*, Spearman over the six
+# activation-frequency bins, for raw KL and for KL per unit perturbation norm.
+_fq = sr.groupby(["kind", "fid"]).agg(kpn=("kl_per_norm", "median"),
+                                      kl=("kl", "median"),
+                                      bin=("bin", "first")).reset_index()
+for _k, _kt in (("trained", "Trained"), ("random", "Random")):
+    _f = _fq[_fq.kind == _k]
+    for _c, _ct in (("kpn", "Norm"), ("kl", "Raw")):
+        _sp = stats.spearmanr(_f.bin, _f[_c])
+        mac(f"FreqRho{_ct}{_kt}", float(_sp.statistic), "{:+.3f}")
+        mac(f"FreqRho{_ct}{_kt}P", float(_sp.pvalue), "{:.3f}")
+    mac(f"FreqRho{_kt}N", len(_f), "{}")
+# the released-suite dictionary count as a word, for prose
+if sanitise("ScopeNDicts") in M:
+    _nd = int(M[sanitise("ScopeNDicts")])
+    mac("ScopeNDictsWord", _wd.get(_nd, str(_nd)), "{}")
+# the displacement comparison count with a thousands separator, for math mode
+if sanitise("DispN") in M:
+    mac("DispNComma", "{:,}".format(int(M[sanitise("DispN")])).replace(",", "{,}"), "{}")
+# the balanced share of the sampled latents at 384 sequences: PairedN (the
+# latents in Table 1) over SampledN, the population every Table 1 cell uses
+_bp = [100.0 * float(M[sanitise(_t + "SThreeEightyFourPairedN")])
+       / float(M[sanitise(_t + "SampledN")])
+       for _t in ("GTwo", "GThree", "QThreeFive", "OlmoTwo", "SmolThree",
+                  "QThreeFiveFourB", "QThreeFiveNineB")
+       if sanitise(_t + "SThreeEightyFourPairedN") in M
+       and sanitise(_t + "SampledN") in M]
+if _bp:
+    mac("AcrossBalancedMin", min(_bp), "{:.0f}")
+    mac("AcrossBalancedMax", max(_bp), "{:.0f}")
+
 # ---------------------------------------------------------------------------
 # POPULATION TAGS. check_numbers.py verifies that each macro equals what its
 # source produces -- provenance. It cannot tell that two macros describe
@@ -1102,6 +1143,12 @@ POP_RULES[:0] = [
      "ours/qwen3.5-2b-12M-against-48M-tokens/corpus-384/comparison"),
 ]
 
+# final-read additions
+POP_RULES[:0] = [
+    (r"^GThreePosResid", "ours/gemma3-1b/corpus-96/per-arm-residual-regression"),
+    (r"^FreqRho", "ours/gemma2/rare-decile-eval"),
+    (r"^DispNComma$", "ours/all-base-models/corpus-384/arm-pair-displacements"),
+]
 
 def population(name):
     for pat, tmpl in POP_RULES:

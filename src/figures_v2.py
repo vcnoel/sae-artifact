@@ -34,7 +34,7 @@ UNCERTAINTY. Every point estimate carries the spread it was computed from: the
 null is a band over repeated shuffles rather than one draw, agreement over a
 matched population carries a binomial interval, the variance components and the
 coefficient carry a latent level bootstrap, and the corpus ladder draws all
-fifteen arm pairs behind each median rather than the mean alone.
+fifteen arm pairs behind each mean rather than drawing the mean alone.
 """
 import io
 import itertools
@@ -345,7 +345,7 @@ def fig_selection():
     ax.set_yticks([])
     ax.set_xlabel("distance between the two selected tokens")
     ax.set_ylabel("density")
-    ax.set_title(f"(a) selection distance, {len(obs):,} arm pairs", loc="left",
+    ax.set_title(f"(a) selection distance, {len(obs):,} latent comparisons", loc="left",
                  pad=3)
 
     ax = fig.add_subplot(gs[1])
@@ -571,9 +571,10 @@ def fig_collapse():
 def fig_ladder():
     """Agreement about where to measure, against evaluation corpus size.
 
-    The median over the fifteen arm pairs is drawn for each base model, the
+    The mean over the fifteen arm pairs is drawn for each base model, the
+    same statistic the TopAgree and Jaccard macros quote, the
     Qwen3.5 ladder in blue and the others in grey, and every pair of every
-    model sits behind it as faint dots, because the median alone hides a
+    model sits behind it as faint dots, because the mean alone hides a
     spread of several to one across pairs.
     """
     agree, jacc = {}, {}
@@ -588,7 +589,7 @@ def fig_ladder():
 
     fig, axes = plt.subplots(1, 2, figsize=(TW, 2.0))
     fig.subplots_adjust(left=0.075, right=0.885, top=0.87, bottom=0.215,
-                        wspace=0.52)
+                        wspace=0.60)
 
     for ax, store, ylab, title, top in (
             (axes[0], agree, r"same token (\%)", "(a) top-1 agreement", 44),
@@ -601,7 +602,7 @@ def fig_ladder():
         ends = []
         for model in sorted(models, key=lambda m: style(m)["z"]):
             st = style(model)
-            meds = [float(np.median(store[(model, c)])) for c in corpora]
+            meds = [float(np.mean(store[(model, c)])) for c in corpora]
             ax.plot(corpora, meds, lw=st["lw"], marker="o",
                     ms=2.6 if model in QWEN else 2.0, color=st["c"],
                     zorder=st["z"])
