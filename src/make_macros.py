@@ -1143,6 +1143,35 @@ POP_RULES[:0] = [
      "ours/qwen3.5-2b-12M-against-48M-tokens/corpus-384/comparison"),
 ]
 
+# Positions per latent: E rho^2 of the shared design against the number k of
+# positions per latent, from src/position_count_curve.py (D-study on the
+# components of the full cube, k = 1..12, checked against re-estimation on
+# k-position subcubes for k <= 6). File: results/position_count_curve.csv,
+# field erho2_dstudy, unit: one base model at 384 sequences.
+_KC_PATH = "results/position_count_curve.csv"
+if os.path.exists(_KC_PATH):
+    _kc = pd.read_csv(_KC_PATH)
+    _kc = _kc[_kc.model.isin(_have)]
+    _k1 = _kc[_kc.k == 1].set_index("model").erho2_dstudy
+    mac("KCurveOneMin", float(_k1.min()), "{:.2f}")
+    mac("KCurveOneMax", float(_k1.max()), "{:.2f}")
+    _k8 = {m: int(g[g.erho2_dstudy >= 0.8].k.min())
+           for m, g in _kc.groupby("model") if (g.erho2_dstudy >= 0.8).any()}
+    assert len(_k8) == len(_have), "a model never reaches 0.8 within k<=12"
+    mac("KCurveEightyMin", min(_k8.values()), "{}")
+    mac("KCurveEightyMax", max(_k8.values()), "{}")
+    _kw = max(_k8, key=_k8.get)
+    mac("KCurveEightyWorst", _PROSE[_kw], "{}")
+    mac("AnchorKCurveEighty", _k8[ANCHOR], "{}")
+    mac("AnchorKCurveOne", float(_k1[ANCHOR]), "{:.2f}")
+    _sub = _kc[(_kc.k >= 2) & _kc.erho2_sub.notna()]
+    mac("KCurveSubMaxDiff",
+        float((_sub.erho2_sub - _sub.erho2_dstudy).abs().max()), "{:.2f}")
+    POP_RULES[:0] = [
+        (r"^KCurve", "ours/all-base-models/corpus-384/shared-cube-k-curve"),
+        (r"^AnchorKCurve", f"ours/{_AM}/corpus-384/shared-cube-k-curve"),
+    ]
+
 # final-read additions
 POP_RULES[:0] = [
     (r"^GThreePosResid", "ours/gemma3-1b/corpus-96/per-arm-residual-regression"),
@@ -1164,6 +1193,31 @@ def population(name):
                            corpus=_CORPUS.get(g1, "?"),
                            pair=_PAIR.get(g0, g0 or "?"))
     return "unclassified"
+
+
+# ------- positions per latent: decision study on the shared cubes ------------
+# results/position_curve_kmin.csv is written by analysis/position_curve.py. Per
+# model at 384 sequences: E rho^2 at one position, the smallest k reaching 0.8
+# and 0.9, and the limit as k grows. Absent file, nothing is emitted.
+if os.path.exists("results/position_curve_kmin.csv"):
+    _pk = pd.read_csv("results/position_curve_kmin.csv")
+    for _r in _pk.itertuples():
+        mac(f"{_r.model}KOneErho", float(_r.erho2_at_1))
+        mac(f"{_r.model}KLimitErho", float(_r.erho2_limit))
+        mac(f"{_r.model}KEighty", int(_r.k_for_080), "{}")
+        mac(f"{_r.model}KNinety", int(_r.k_for_090), "{}")
+    mac("AcrossKOneErhoMin", float(_pk.erho2_at_1.min()))
+    mac("AcrossKOneErhoMax", float(_pk.erho2_at_1.max()))
+    mac("AcrossKEightyMin", int(_pk.k_for_080.min()), "{}")
+    mac("AcrossKEightyMax", int(_pk.k_for_080.max()), "{}")
+    mac("AcrossKNinetyMax", int(_pk.k_for_090.max()), "{}")
+    for _q in ("KOneErho", "KEighty", "KNinety"):
+        M[sanitise("Anchor" + _q)] = M[sanitise(ANCHOR + _q)]
+    POP_RULES.insert(0, (r"^Anchor(KOneErho|KEighty|KNinety)$",
+                         f"ours/{_AM}/corpus-384/shared-positions"))
+    POP_RULES.insert(0, (r"^AcrossK", "ours/all-base-models/corpus-384/shared-positions"))
+    POP_RULES.insert(0, (r"^(QThreeFiveFourB|QThreeFiveNineB|QThreeFive|SmolThree|OlmoTwo|GThree|GTwo)K(One|Limit|Eighty|Ninety)",
+                         "ours/{model}/corpus-384/shared-positions"))
 
 
 os.makedirs("paper", exist_ok=True)
