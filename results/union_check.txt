@@ -107,4 +107,21 @@ union (mean)                 90          0.0%    0.831   +0.161 [+0.100, +0.224]
     VERDICT: collapse survives. Position control, not candidate
     selection, is what removes the interaction.
 
-qwen35-9b: MISSING ['per_arm', 'shared', 'union']
+============================================================================================
+qwen35-9b  (n_seq 384)
+============================================================================================
+rule                    latents  latent x arm    Erho2    paired gain vs per-arm
+per-arm                     115          9.5%    0.628                        --
+shared (min-gated)          115          0.0%    0.802   +0.174 [+0.080, +0.288]
+union (mean)                 87          0.0%    0.844   +0.140 [+0.081, +0.224]
+
+  retention: min-gated 151 latents, union 129
+
+  PRE-REGISTERED PREDICTIONS (PREREG.md E28)
+    P1 retention falls under union: True
+    P2 union interaction below 5%: True  (0.0%)
+    P3 union collapse weaker than min-gated: False  (0.0% vs 0.0%)
+
+    VERDICT: collapse survives. Position control, not candidate
+    selection, is what removes the interaction.
+

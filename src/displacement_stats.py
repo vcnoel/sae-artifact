@@ -19,7 +19,14 @@ import pandas as pd
 from fig_one import displacements
 
 FILES = {"gemma2-2b": "results/eval_arms_g2_s384.csv",
-         "gemma3-1b": "results/eval_arms_g3_s384.csv"}
+         "gemma3-1b": "results/eval_arms_g3_s384.csv",
+         "qwen35-2b": "results/eval_arms_q35_s384.csv",
+         "qwen35-4b": "results/eval_arms_q354b_s384.csv"}
+# the 9B rung once its 384-sequence evaluation has landed; absent, the table
+# is exactly the rows above
+import os
+if os.path.exists("results/eval_arms_q359b_s384.csv"):
+    FILES["qwen35-9b"] = "results/eval_arms_q359b_s384.csv"
 
 rows = []
 for model, f in FILES.items():

@@ -380,6 +380,16 @@ for _fam, _ft in FAMILIES:
         _sh = f"results/eval_arms_{_ft}{_sfx}_shared.csv"
         if os.path.exists(_pa) and os.path.exists(_sh):
             CONDS.append((_fam, _c, _pa, _sh))
+# The 48M-token Qwen3.5-2B arms (model config qwen35-2b-full): the same six
+# fitting choices from the same initialisation at four times the 12M budget.
+# Their own prefix, QThreeFiveFull, and deliberately absent from _ALL below, so
+# no range, count or exception list over the base models moves when they land.
+for _c, _sfx in (("SNinetySix", ""), ("SThreeEightyFour", "_s384"),
+                 ("SFifteenThirtySix", "_s1536")):
+    _pa = f"results/eval_arms_q35full{_sfx}.csv"
+    _sh = f"results/eval_arms_q35full{_sfx}_shared.csv"
+    if os.path.exists(_pa) and os.path.exists(_sh):
+        CONDS.append(("QThreeFiveFull", _c, _pa, _sh))
 B_PAIRED = 2000
 
 for _model, _corpus, _pap, _shp in CONDS:
@@ -468,6 +478,94 @@ for _t, _f in (("QThreeFive", "q35"), ("OlmoTwo", "o2"), ("SmolThree", "s3"),
                    io.open(_pp, encoding="utf-8").read())
     if _m:
         mac(f"{_t}PosResidRTwo", float(_m.group(1)), "{:.3f}")
+
+# ------- the 48M-token arms against the 12M arms of the same base -----------
+# One rule for all three quantities at 384 sequences: a 48M value matches when
+# its printed value lies inside the 95% latent-level bootstrap interval of the
+# 12M value. The gain already carries that interval (paired bootstrap above).
+# The position share and top agreement get theirs here, from fresh generators
+# seeded from their own data, so no existing macro moves. The phrases are
+# generated from the verdicts, so the sentence quoting them cannot disagree.
+_pp = "results/position_structure_q35full.txt"
+if os.path.exists(_pp):
+    _m = re.search(r"rel_pos \+ log_act \+ act_rank\s*=\s*([\d.]+)",
+                   io.open(_pp, encoding="utf-8").read())
+    if _m:
+        mac("QThreeFiveFullPosResidRTwo", float(_m.group(1)), "{:.3f}")
+if (sanitise("QThreeFiveFullSThreeEightyFourGain") in M
+        and sanitise("QThreeFiveSThreeEightyFourGain") in M):
+    _p12, _s12 = ("results/eval_arms_q35_s384.csv",
+                  "results/eval_arms_q35_s384_shared.csv")
+    _, _, _ca12, _cs12, _ = _build_cubes(_p12, _s12)
+    _r = np.random.default_rng(abs(int(np.sum(np.round(_cs12, 9) * 1e6)))
+                               % (2 ** 31))
+    _sh = []
+    for _ in range(B_PAIRED):
+        _c = comp_cube(_cs12[_r.integers(0, _cs12.shape[0], _cs12.shape[0])])
+        _sh.append(100 * _c["v_e"] / (_c["v_a"] + _c["v_b"] + _c["v_ab"]
+                                      + _c["v_e"]))
+    mac("QThreeFiveFullRefPosShareLo", float(np.percentile(_sh, 2.5)), "{:.1f}")
+    mac("QThreeFiveFullRefPosShareHi", float(np.percentile(_sh, 97.5)), "{:.1f}")
+    _d12 = pd.read_csv(_p12)
+    _t12 = (_d12.sort_values("act", ascending=False).groupby(["fid", "arm"])
+            .head(1).pivot(index="fid", columns="arm", values="pos"))
+    _pairs = list(itertools.combinations(list(_t12.columns), 2))
+    _r = np.random.default_rng(int(_t12.fillna(-1).to_numpy().sum()) % (2 ** 31))
+    _ta = []
+    for _ in range(B_PAIRED):
+        _tb = _t12.iloc[_r.integers(0, len(_t12), len(_t12))]
+        _ta.append(np.mean([100.0 * float((_tb[[x, y2]].dropna()[x]
+                                           == _tb[[x, y2]].dropna()[y2]).mean())
+                            for x, y2 in _pairs]))
+    mac("QThreeFiveFullRefTopAgreeLo", float(np.percentile(_ta, 2.5)), "{:.1f}")
+    mac("QThreeFiveFullRefTopAgreeHi", float(np.percentile(_ta, 97.5)), "{:.1f}")
+    _gv = lambda k: float(M[sanitise(k)])
+    _pl = lambda xs: (", ".join(list(xs)[:-1]) + " and " + list(xs)[-1]
+                      if len(list(xs)) > 1 else "".join(xs))
+    _S = "QThreeFiveSThreeEightyFour"
+    _F = "QThreeFiveFullSThreeEightyFour"
+    _cmp = [("the position share", _gv(_F + "SharedPctResid"),
+             _gv(_S + "SharedPctResid"), _gv("QThreeFiveFullRefPosShareLo"),
+             _gv("QThreeFiveFullRefPosShareHi")),
+            ("the gain", _gv(_F + "Gain"), _gv(_S + "Gain"),
+             _gv(_S + "GainLo"), _gv(_S + "GainHi")),
+            ("top agreement", _gv(_F + "TopAgree"), _gv(_S + "TopAgree"),
+             _gv("QThreeFiveFullRefTopAgreeLo"),
+             _gv("QThreeFiveFullRefTopAgreeHi"))]
+    _in = [n for n, v, _, lo, hi in _cmp if lo <= v <= hi]
+    _out = [(n, "higher" if v > v12 else "lower")
+            for n, v, v12, lo, hi in _cmp if not lo <= v <= hi]
+    mac("QThreeFiveFullMatchN", len(_in), "{}")
+    _iv = r"the $95\%$ interval of the $12$M value"
+    if not _out:
+        mac("QThreeFiveFullMatchPhrase", "each inside " + _iv, "{}")
+        mac("QThreeFiveFullVerdict",
+            "A fourfold budget leaves all three unchanged within bootstrap "
+            "error on this base model", "{}")
+    else:
+        _dir = ", ".join([f"{_out[0][0]} is {_out[0][1]}"]
+                         + [f"{n} {d}" for n, d in _out[1:]])
+        _dir = (_dir.rsplit(", ", 1)[0] + " and " + _dir.rsplit(", ", 1)[1]
+                if len(_out) > 1 else _dir)
+        # A shift is in the direction of the finding when the effect the standard corrects grows:
+        # a larger position share or gain, or arms agreeing less often on the top position.
+        _strengthen = {("the position share", "higher"), ("the gain", "higher"),
+                       ("top agreement", "lower")}
+        _all_strengthen = all(o in _strengthen for o in _out)
+        if not _in:
+            mac("QThreeFiveFullMatchPhrase", "each outside " + _iv, "{}")
+            _v = ("longer training sharpens the effect rather than removing it" if _all_strengthen
+                  else "the result depends on the training budget")
+        else:
+            mac("QThreeFiveFullMatchPhrase",
+                f"with {_pl(_in)} inside {_iv} and "
+                f"{_pl([n for n, _ in _out])} outside it", "{}")
+            _v = ("longer training sharpens the disagreement the standard corrects rather than "
+                  "removing it" if _all_strengthen
+                  else "part of the result depends on the training budget")
+        mac("QThreeFiveFullVerdict",
+            f"At four times the budget {_dir}, so on this base model {_v}",
+            "{}")
 
 # ------- summaries across the base models of the design ---------------------
 # Ranges and counts over every model present at 384 sequences, derived from the
@@ -705,6 +803,23 @@ if os.path.exists("results/displacement.csv"):
             mac(f"{_t}Disp{_kt}Median", float(_r["median"]), "{:.0f}")
             mac(f"{_t}Disp{_kt}Far", float(_r.pct_far), "{:.0f}")
     mac("DispN", int(_dp[_dp.kind == "observed"].n.iloc[0]), "{}")
+    # the Qwen3.5 rungs, same rows and fields as the Gemma pair above
+    for _mod, _t in (("qwen35-2b", "QThreeFive"), ("qwen35-4b", "QThreeFiveFourB"),
+                     ("qwen35-9b", "QThreeFiveNineB")):
+        for _k, _kt in (("observed", "Obs"), ("shuffled", "Null")):
+            _r = _dp[(_dp.model == _mod) & (_dp.kind == _k)]
+            if not len(_r):
+                continue
+            _r = _r.iloc[0]
+            mac(f"{_t}Disp{_kt}Same", float(_r.pct_same), "{:.1f}")
+            mac(f"{_t}Disp{_kt}Median", float(_r["median"]), "{:.0f}")
+            mac(f"{_t}Disp{_kt}Far", float(_r.pct_far), "{:.0f}")
+        _o = _dp[(_dp.model == _mod) & (_dp.kind == "observed")]
+        _s = _dp[(_dp.model == _mod) & (_dp.kind == "shuffled")]
+        if len(_o) and len(_s):
+            # observed over null same-token share, from the unrounded rows
+            mac(f"{_t}DispRatio", float(_o.pct_same.iloc[0])
+                / float(_s.pct_same.iloc[0]), "{:.1f}")
 
 # The chance baseline. Without it the result reads the wrong way round: a
 # reviewer who thinks about the denominator sees two dictionaries picking from
@@ -826,6 +941,42 @@ for _qs, _qt in (("2b", "QwenTwoB"), ("9b", "QwenNineB")):
         mac(f"{_qt}Weighted", float((_qb.share_mutual * _qb.top_agree).sum()
                                     / _qb.share_mutual.sum()), "{:.0f}")
 
+# ------- anchor model of the body --------------------------------------------
+# The body's worked examples quote one base model, named once in the setup.
+# Every sentence that quotes it reads an Anchor* macro copied from that slug's
+# own macros, so swapping the anchor is this one line plus a prose pass.
+# The anchor is the largest Qwen3.5 rung whose inputs are all on disk, chosen by
+# src/anchor.py, which figures_v2.py reads too, so Figure 1 and the prose
+# cannot quote different models.
+from anchor import choose as _choose_anchor          # noqa: E402
+ANCHOR = _choose_anchor()[0]
+mac("AnchorModel", _PROSE[ANCHOR], "{}")
+for _q, _src in (("SampledN", "SampledN"),
+                 ("UncPctAb", "SThreeEightyFourUncPctAb"),
+                 ("DispObsSame", "DispObsSame"),
+                 ("DispNullSame", "DispNullSame")):
+    if _has(ANCHOR + _src):
+        M[sanitise("Anchor" + _q)] = M[sanitise(ANCHOR + _src)]
+# the observed-over-null ratio as the words the prose rounds it to, to the
+# nearest half: 2.9 reads "three", 3.5 reads "three and a half"
+if _has(ANCHOR + "DispRatio"):
+    _hr = round(2 * _fv(ANCHOR + "DispRatio")) / 2
+    _hw = _wd.get(int(_hr), str(int(_hr)))
+    mac("AnchorDispRatioWord",
+        _hw + (" and a half" if _hr != int(_hr) else ""), "{}")
+# every Anchor* macro the body quotes must exist for the chosen slug
+for _q in ("Model", "SampledN", "UncPctAb", "DispObsSame", "DispNullSame",
+           "DispRatioWord"):
+    if not _has("Anchor" + _q):
+        raise SystemExit(f"anchor {ANCHOR}: Anchor{_q} has no source macro")
+# the full-sample per-arm interaction at 384 sequences over every model present,
+# the range the anchor's own value is quoted against
+_uv = [_fv(x + "SThreeEightyFourUncPctAb") for x in _have
+       if _has(x + "SThreeEightyFourUncPctAb")]
+if _uv:
+    mac("AcrossUncPctAbMin", min(_uv), "{:.1f}")
+    mac("AcrossUncPctAbMax", max(_uv), "{:.1f}")
+
 # ------- E25c: the Gemma-2 fixed-latent tie at 384 and 1536 -----------------
 # Appendix D quotes the components under the two tied fixed-set gains. Read from
 # the same fixed_latent_curve.csv rows as E25b, so the tie paragraph cannot
@@ -928,6 +1079,28 @@ _PAIR = {"Sparsity": "same-width", "Width": "different-width"}
 # exception lists name models across the design, so they share the Across tag
 POP_RULES.insert(0, (r"^(Exc|UnionGainExcl|UnionBoundary)",
                      "ours/all-base-models/corpus-384-unless-named/exception-list"))
+# the anchor copies carry the population of the slug they are copied from
+_AM = _MODEL[ANCHOR]
+POP_RULES.insert(0, (r"^AnchorModel$", "ours/all-base-models/design-count"))
+POP_RULES.insert(0, (r"^AnchorSampledN$", f"ours/{_AM}/corpus-384/sampled-latents"))
+POP_RULES.insert(0, (r"^AnchorUncPctAb$", f"ours/{_AM}/corpus-384/full-sample"))
+POP_RULES.insert(0, (r"^AnchorDisp", f"ours/{_AM}/corpus-384/arm-pair-displacements"))
+POP_RULES.insert(0, (r"^(QThreeFiveFourB|QThreeFiveNineB|QThreeFive)Disp",
+                     "ours/{model}/corpus-384/arm-pair-displacements"))
+# the 48M-token Qwen3.5-2B arms, a unit of their own beside the 12M arms
+_MODEL["QThreeFiveFull"] = "qwen3.5-2b-48M-tokens"
+POP_RULES[:0] = [
+    (r"^(QThreeFiveFull)S(NinetySix|ThreeEightyFour|FifteenThirtySix)Unc",
+     "ours/{model}/corpus-{corpus}/full-sample"),
+    (r"^(QThreeFiveFull)S(NinetySix|ThreeEightyFour|FifteenThirtySix)",
+     "ours/{model}/corpus-{corpus}/paired-cube"),
+    (r"^(QThreeFiveFull)PosResid",
+     "ours/{model}/corpus-96/per-arm-residual-regression"),
+    (r"^QThreeFiveFullRef",
+     "ours/qwen3.5-2b/corpus-384/latent-bootstrap-interval"),
+    (r"^QThreeFiveFull(Match|Verdict)",
+     "ours/qwen3.5-2b-12M-against-48M-tokens/corpus-384/comparison"),
+]
 
 
 def population(name):

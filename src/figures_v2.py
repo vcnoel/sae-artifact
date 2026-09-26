@@ -15,7 +15,8 @@
                            evaluation corpus size, every arm pair drawn.
 
 LEAD MODEL. The Qwen3.5 rungs lead every figure: figure 1 is drawn on the
-largest Qwen3.5 rung present (9B once its three corpus files exist, else 4B)
+anchor model of the body, the rule of src/anchor.py (the largest Qwen3.5
+rung whose inputs are all on disk, the same rule the Anchor* macros use)
 with every other base model's observed distribution in grey, figure 2 draws the
 Qwen-Scope sparsity pairs in colour over Gemma Scope in grey, and figures 3 and
 4 draw the Qwen3.5 ladder in a blue ramp over grey context. A rung or release
@@ -257,7 +258,12 @@ def boot_components(pap, shp, b=B_BOOT):
 # grey context behind them, labelled in grey. A rung that lands later (9B)
 # enters the ramp at the dark end without any change here.
 QWEN = [m for m in MODELS if m.startswith("qwen35")]
-LEAD = QWEN[0] if QWEN else MODELS[0]
+# Figure 1 is drawn on the anchor model of the body, chosen by the one rule
+# in src/anchor.py that make_macros.py also reads, so the figure and the
+# prose quoting \AnchorModel cannot disagree.
+from anchor import choose as choose_anchor
+LEAD = choose_anchor()[1]
+assert LEAD in MODELS, (LEAD, MODELS)
 RAMP = ["#08457A", "#0072B2", "#5A9FD0"]
 CTX = "#ABABAB"
 
